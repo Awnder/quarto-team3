@@ -1,5 +1,7 @@
 # Quarto Team 3
 
+![Quarto Game Image](./quarto-image.webp)
+
 Quarto is a strategic two-player board game! This is a virtual 2D implementation using Python and Tkinter with slightly modified characteristics.
 
 This is currently version 1!
