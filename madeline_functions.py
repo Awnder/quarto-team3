@@ -11,7 +11,7 @@ def draw_large_green_hollow_square(canvas: object, startx: int, starty: int) -> 
   canvas.create_rectangle(startx, starty, startx+200, starty+200, fill="green")
   canvas.create_rectangle(startx+50, starty+50, startx+150, starty+150, fill="white")
 
-def draw_small_green_hollow_square((canvas: object, startx: int, starty: int) -> None:
+def draw_small_green_hollow_square(canvas: object, startx: int, starty: int) -> None:
   canvas.create_rectangle(startx, starty, startx+50, starty+50, fill="green")
   canvas.create_rectangle(startx+15, starty+15, startx+35, starty+35, fill="white")
 
