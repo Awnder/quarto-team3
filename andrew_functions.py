@@ -1,45 +1,67 @@
 import tkinter as tk
 import tkinter.ttk
 
-def draw_solid_purple_large_square(canvas: object, startx: int, starty: int) -> None:
-  canvas.create_rectangle(startx, starty, startx+200, starty+200, fill="purple")
+fifteen = 15
+thirty_five = 35
+fifty = 50
+one_hundred_fifty = 150
+two_hundred = 200
 
-def draw_solid_purple_small_square(canvas: object, startx: int, starty: int) -> None:
-  canvas.create_rectangle(startx, starty, startx+50, starty+50, fill="purple")
+def draw_large_purple_solid_square(canvas: object, startx: int, starty: int) -> None:
+  canvas.create_rectangle(startx, starty, startx+two_hundred, starty+two_hundred, fill="purple")
 
-def draw_hollow_purple_large_square(canvas: object, startx: int, starty: int) -> None:
-  canvas.create_rectangle(startx, starty, startx+200, starty+200, fill="purple")
-  canvas.create_rectangle(startx+50, starty+50, startx+150, starty+150, fill="white")
+def draw_small_purple_solid_square(canvas: object, startx: int, starty: int) -> None:
+  canvas.create_rectangle(startx, starty, startx+fifty, starty+fifty, fill="purple")
 
-def draw_hollow_purple_small_square(canvas: object, startx: int, starty: int) -> None:
-  canvas.create_rectangle(startx, starty, startx+50, starty+50, fill="purple")
-  canvas.create_rectangle(startx+15, starty+15, startx+35, starty+35, fill="white")
+def draw_large_purple_hollow_square(canvas: object, startx: int, starty: int) -> None:
+  canvas.create_rectangle(startx, starty, startx+two_hundred, starty+two_hundred, fill="purple")
+  canvas.create_rectangle(startx+fifty, starty+fifty, startx+one_hundred_fifty, starty+one_hundred_fifty, fill="white")
 
-def draw_solid_purple_large_circle(canvas: object, startx: int, starty: int) -> None:
-  canvas.create_oval(startx, starty, startx+200, starty+200, fill="purple")
+def draw_small_purple_hollow_circle(canvas: object, startx: int, starty: int) -> None:
+  canvas.create_rectangle(startx, starty, startx+fifty, starty+fifty, fill="purple")
+  canvas.create_rectangle(startx+one_hundred_fifty, starty+one_hundred_fifty, startx+thirty_five, starty+thirty_five, fill="white")
 
-# Cruse
-def draw_solid_green_small_circle(canvas: object, startx: int, starty: int) -> None:
-    canvas.create_oval(startx, starty, startx+50, starty+50, fill="green")
+def draw_large_purple_solid_cricle(canvas: object, startx: int, starty: int) -> None:
+  canvas.create_oval(startx, starty, startx+two_hundred, starty+two_hundred, fill="purple")
 
-def draw_solid_purple_small_circle(canvas: object, startx: int, starty: int) -> None:
-    canvas.create_oval(startx, starty, startx+50, starty+50, fill="purple")
+def draw_small_green_solid_circle(canvas: object, startx: int, starty: int) -> None:
+    canvas.create_oval(startx, starty, startx+fifty, starty+fifty, fill="green")
+
+def draw_small_purple_solid_circle(canvas: object, startx: int, starty: int) -> None:
+    canvas.create_oval(startx, starty, startx+fifty, starty+fifty, fill="purple")
   
-def draw_hollow_green_large_circle(canvas: object, startx: int, starty: int) -> None:
-    canvas.create_oval(startx, starty, startx+200, starty+200, fill="green", outline="green", width=2)
-    canvas.create_oval(startx+50, starty+50, startx+150, starty+150, fill="white", outline="green", width=2)
+def draw_large_green_hollow_circle(canvas: object, startx: int, starty: int) -> None:
+    canvas.create_oval(startx, starty, startx+two_hundred, starty+two_hundred, fill="green", outline="green", width=2)
+    canvas.create_oval(startx+fifty, starty+fifty, startx+one_hundred_fifty, starty+one_hundred_fifty, fill="white", outline="green", width=2)
   
-def draw_hollow_purple_large_circle(canvas: object, startx: int, starty: int) -> None:
-    canvas.create_oval(startx, starty, startx+200, starty+200, fill="purple", outline="purple", width=2)
-    canvas.create_oval(startx+50, starty+50, startx+150, starty+150, fill="white", outline="purple", width=2)
+def def_large_purple_hollow_circle(canvas: object, startx: int, starty: int) -> None:
+    canvas.create_oval(startx, starty, startx+two_hundred, starty+two_hundred, fill="purple", outline="purple", width=2)
+    canvas.create_oval(startx+fifty, starty+fifty, startx+one_hundred_fifty, starty+one_hundred_fifty, fill="white", outline="purple", width=2)
 
-def draw_hollow_green_small_circle(canvas: object, startx: int, starty: int) -> None:
-    canvas.create_oval(startx, starty, startx+50, starty+50, fill="green", outline="green", width=2)
-    canvas.create_oval(startx+15, starty+15, startx+35, starty+35, fill="white", outline="green", width=2)
+def draw_small_green_hollow_circle(canvas: object, startx: int, starty: int) -> None:
+    canvas.create_oval(startx, starty, startx+fifty, starty+fifty, fill="green", outline="green", width=2)
+    canvas.create_oval(startx+one_hundred_fifty, starty+one_hundred_fifty, startx+thirty_five, starty+thirty_five, fill="white", outline="green", width=2)
 
-def draw_hollow_purple_small_circle(canvas: object, startx: int, starty: int) -> None:
-    canvas.create_oval(startx, starty, startx+50, starty+50, fill="purple", outline="purple", width=2)
-    canvas.create_oval(startx+15, starty+15, startx+35, starty+35, fill="white", outline="purple", width=2)
+def draw_small_purple_hollow_circle(canvas: object, startx: int, starty: int) -> None:
+    canvas.create_oval(startx, starty, startx+fifty, starty+fifty, fill="purple", outline="purple", width=2)
+    canvas.create_oval(startx+one_hundred_fifty, starty+one_hundred_fifty, startx+thirty_five, starty+thirty_five, fill="white", outline="purple", width=2)
+
+def draw_large_green_solid_square(canvas: object, startx: int, starty: int) -> None:
+    canvas.create_rectangle(startx, starty, startx+two_hundred, starty+two_hundred, fill="green")
+
+def draw_small_green_solid_square(canvas: object, startx: int, starty: int) -> None:
+    canvas.create_rectangle(startx, starty, startx+fifty, starty+fifty, fill="green")
+
+def draw_large_green_hollow_square(canvas: object, startx: int, starty: int) -> None:
+    canvas.create_rectangle(startx, starty, startx+two_hundred, starty+two_hundred, fill="green")
+    canvas.create_rectangle(startx+fifty, starty+fifty, startx+one_hundred_fifty, starty+one_hundred_fifty, fill="white")
+
+def draw_small_green_hollow_square(canvas: object, startx: int, starty: int) -> None:
+    canvas.create_rectangle(startx, starty, startx+fifty, starty+fifty, fill="green")
+    canvas.create_rectangle(startx+one_hundred_fifty, starty+one_hundred_fifty, startx+thirty_five, starty+thirty_five, fill="white")
+
+def draw_large_green_solid_circle(canvas: object, startx: int, starty: int) -> None:
+    canvas.create_oval(startx, starty, startx+two_hundred, starty+two_hundred, fill="green")
 
 def test():
   root = tk.Tk()
