@@ -62,6 +62,33 @@ def draw_small_green_hollow_square(canvas: object, startx: int, starty: int) -> 
 def draw_large_green_solid_circle(canvas: object, startx: int, starty: int) -> None:
     canvas.create_oval(startx, starty, startx+outer_large_size, starty+outer_large_size, fill="green")
 
+def draw_piece(canvas: object, piece: str, startx: int, starty: int) -> None:
+  """ Unifying function that will draw any of the 16 pieces """
+  piece_draw_functions = {
+        "large_purple_solid_square": draw_large_purple_solid_square,
+        "small_purple_solid_square": draw_small_purple_solid_square,
+        "large_purple_hollow_square": draw_large_purple_hollow_square,
+        "small_purple_hollow_circle": draw_small_purple_hollow_circle,
+        "large_purple_solid_circle": draw_large_purple_solid_cricle,
+        "small_green_solid_circle": draw_small_green_solid_circle,
+        "small_purple_solid_circle": draw_small_purple_solid_circle,
+        "large_green_hollow_circle": draw_large_green_hollow_circle,
+        "large_purple_hollow_circle": def_large_purple_hollow_circle,
+        "small_green_hollow_circle": draw_small_green_hollow_circle,
+        "small_purple_hollow_circle": draw_small_purple_hollow_circle,
+        "large_green_solid_square": draw_large_green_solid_square,
+        "small_green_solid_square": draw_small_green_solid_square,
+        "large_green_hollow_square": draw_large_green_hollow_square,
+        "small_green_hollow_square": draw_small_green_hollow_square,
+        "large_green_solid_circle": draw_large_green_solid_circle,
+    }
+  
+  # Call the appropriate function based on the piece identifier
+  if piece in piece_draw_functions:
+        piece_draw_functions[piece](canvas, startx, starty)
+  else:
+        print(f"Error: Unknown piece identifier '{piece}'")
+
 def create_board():
     root = tk.Tk()
     root.title('Game Board')
