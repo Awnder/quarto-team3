@@ -1,142 +1,127 @@
 import tkinter as tk
 import tkinter.ttk
 
-inner_small_size = 35
-outer_small_size = 50
-inner_large_size = 150
-outer_large_size = 200
-
-def draw_large_purple_solid_square(canvas: object, startx: int, starty: int) -> None:
-  canvas.create_rectangle(startx, starty, startx+outer_large_size, starty+outer_large_size, fill="purple")
-
-def draw_small_purple_solid_square(canvas: object, startx: int, starty: int) -> None:
-  canvas.create_rectangle(startx, starty, startx+outer_small_size, starty+outer_small_size, fill="purple")
-
-def draw_large_purple_hollow_square(canvas: object, startx: int, starty: int) -> None:
-  canvas.create_rectangle(startx, starty, startx+outer_large_size, starty+outer_large_size, fill="purple")
-  canvas.create_rectangle(startx+outer_small_size, starty+outer_small_size, startx+inner_large_size, starty+inner_large_size, fill="white")
-
-def draw_small_purple_hollow_square(canvas: object, startx: int, starty: int) -> None:
-  canvas.create_rectangle(startx, starty, startx+outer_small_size, starty+outer_small_size, fill="purple")
-  canvas.create_rectangle(startx+inner_large_size, starty+inner_large_size, startx+inner_small_size, starty+inner_small_size, fill="white")
-
-def draw_large_purple_solid_cricle(canvas: object, startx: int, starty: int) -> None:
-  canvas.create_oval(startx, starty, startx+outer_large_size, starty+outer_large_size, fill="purple")
-
-def draw_small_green_solid_circle(canvas: object, startx: int, starty: int) -> None:
-    canvas.create_oval(startx, starty, startx+outer_small_size, starty+outer_small_size, fill="green")
-
-def draw_small_purple_solid_circle(canvas: object, startx: int, starty: int) -> None:
-    canvas.create_oval(startx, starty, startx+outer_small_size, starty+outer_small_size, fill="purple")
-  
-def draw_large_green_hollow_circle(canvas: object, startx: int, starty: int) -> None:
-    canvas.create_oval(startx, starty, startx+outer_large_size, starty+outer_large_size, fill="green", outline="green", width=2)
-    canvas.create_oval(startx+outer_small_size, starty+outer_small_size, startx+inner_large_size, starty+inner_large_size, fill="white", outline="green", width=2)
-  
-def draw_large_purple_hollow_circle(canvas: object, startx: int, starty: int) -> None:
-    canvas.create_oval(startx, starty, startx+outer_large_size, starty+outer_large_size, fill="purple", outline="purple", width=2)
-    canvas.create_oval(startx+outer_small_size, starty+outer_small_size, startx+inner_large_size, starty+inner_large_size, fill="white", outline="purple", width=2)
-
-def draw_small_green_hollow_circle(canvas: object, startx: int, starty: int) -> None:
-    canvas.create_oval(startx, starty, startx+outer_small_size, starty+outer_small_size, fill="green", outline="green", width=2)
-    canvas.create_oval(startx+inner_large_size, starty+inner_large_size, startx+inner_small_size, starty+inner_small_size, fill="white", outline="green", width=2)
-
-def draw_small_purple_hollow_circle(canvas: object, startx: int, starty: int) -> None:
-    canvas.create_oval(startx, starty, startx+outer_small_size, starty+outer_small_size, fill="purple", outline="purple", width=2)
-    canvas.create_oval(startx+inner_large_size, starty+inner_large_size, startx+inner_small_size, starty+inner_small_size, fill="white", outline="purple", width=2)
-
-def draw_large_green_solid_square(canvas: object, startx: int, starty: int) -> None:
-    canvas.create_rectangle(startx, starty, startx+outer_large_size, starty+outer_large_size, fill="green")
-
-def draw_small_green_solid_square(canvas: object, startx: int, starty: int) -> None:
-    canvas.create_rectangle(startx, starty, startx+outer_small_size, starty+outer_small_size, fill="green")
-
-def draw_large_green_hollow_square(canvas: object, startx: int, starty: int) -> None:
-    canvas.create_rectangle(startx, starty, startx+outer_large_size, starty+outer_large_size, fill="green")
-    canvas.create_rectangle(startx+outer_small_size, starty+outer_small_size, startx+inner_large_size, starty+inner_large_size, fill="white")
-
-def draw_small_green_hollow_square(canvas: object, startx: int, starty: int) -> None:
-    canvas.create_rectangle(startx, starty, startx+outer_small_size, starty+outer_small_size, fill="green")
-    canvas.create_rectangle(startx+inner_large_size, starty+inner_large_size, startx+inner_small_size, starty+inner_small_size, fill="white")
-
-def draw_large_green_solid_circle(canvas: object, startx: int, starty: int) -> None:
-    canvas.create_oval(startx, starty, startx+outer_large_size, starty+outer_large_size, fill="green")
-
-def draw_piece(canvas: object, piece: str, startx: int, starty: int) -> None:
-  """ Unifying function that will draw any of the 16 pieces """
-  piece_draw_functions = {
-        "large_purple_solid_square": draw_large_purple_solid_square,
-        "small_purple_solid_square": draw_small_purple_solid_square,
-        "large_purple_hollow_square": draw_large_purple_hollow_square,
-        "small_purple_hollow_square": draw_small_purple_hollow_square,
-        "large_purple_solid_circle": draw_large_purple_solid_cricle,
-        "small_green_solid_circle": draw_small_green_solid_circle,
-        "small_purple_solid_circle": draw_small_purple_solid_circle,
-        "large_green_hollow_circle": draw_large_green_hollow_circle,
-        "large_purple_hollow_circle": draw_large_purple_hollow_circle,
-        "small_green_hollow_circle": draw_small_green_hollow_circle,
-        "small_purple_hollow_circle": draw_small_purple_hollow_circle,
-        "large_green_solid_square": draw_large_green_solid_square,
-        "small_green_solid_square": draw_small_green_solid_square,
-        "large_green_hollow_square": draw_large_green_hollow_square,
-        "small_green_hollow_square": draw_small_green_hollow_square,
-        "large_green_solid_circle": draw_large_green_solid_circle,
-    }
-  
-  # Call the appropriate function based on the piece identifier
-  if piece in piece_draw_functions:
-        piece_draw_functions[piece](canvas, startx, starty)
-  else:
-        print(f"Error: Unknown piece identifier '{piece}'")
-
-def create_board():
-    root = tk.Tk()
+def draw_board():
+    root= tk.Tk()
     root.title('Game Board')
-    root.geometry('1200x800')
+    root.geometry('2400x1600')
     canvas = tk.Canvas(root)
     canvas.pack(fill=tk.BOTH, expand=1)
     canvas.configure(bg="white")
 
-    canvas.create_rectangle(300, 100, 300+600, 100+600, fill="white")
-    # horizontal lines
-    canvas.create_line(300, 400, 900, 400, fill="black", width=1)
-    canvas.create_line(300, 250, 900, 250, fill="black", width=1)
-    canvas.create_line(300, 550, 900, 550, fill="black", width=1)
-    # vertical lines
-    canvas.create_line(600, 100, 600, 700, fill="black", width=1)
-    canvas.create_line(450, 100, 450, 700, fill="black", width=1)
-    canvas.create_line(750, 100, 750, 700, fill="black", width=1)
+    canvas.create_rectangle(400, 50, 1200, 850, fill="white", outline="black", width=1)
+
+    canvas.create_line(400, 250, 1200, 250, fill="black", width=1)
+    canvas.create_line(400, 450, 1200, 450, fill="black", width=1)
+    canvas.create_line(400, 650, 1200, 650, fill="black", width=1)
+
+    canvas.create_line(600, 50, 600, 850, fill="black", width=1)
+    canvas.create_line(800, 50, 800, 850, fill="black", width=1)
+    canvas.create_line(1000, 50, 1000, 850, fill="black", width=1)
+
+    draw_large_purple_solid_square(canvas, 250, 75)
+    draw_large_purple_hollow_square(canvas, 250, 190)
+    draw_large_purple_solid_circle(canvas, 250, 305)
+    draw_large_purple_hollow_circle(canvas, 250, 420)
+    draw_small_purple_solid_square(canvas, 275, 535)
+    draw_small_purple_hollow_square(canvas, 275, 600)
+    draw_small_purple_solid_circle(canvas, 275, 665)
+    draw_small_purple_hollow_circle(canvas, 275, 730)
+
+    draw_large_green_solid_square(canvas, 50, 75)
+    draw_large_green_hollow_square(canvas, 50, 190)
+    draw_large_green_solid_circle(canvas, 50, 305)
+    draw_large_green_hollow_circle(canvas, 50, 420)
+    draw_small_green_solid_square(canvas, 75, 535)
+    draw_small_green_hollow_square(canvas, 75, 600)
+    draw_small_green_solid_circle(canvas, 75, 665)
+    draw_small_green_hollow_circle(canvas, 75, 730)
 
     root.mainloop()
 
-def test():
-  root = tk.Tk()
-  root.title('Shapes')
-  root.geometry('700x700')
+small_small = 15
+small_large = 50
+large_small = 25
+large_large = 100
 
-  canvas = tk.Canvas()
-  canvas.pack(fill=tk.BOTH, expand=1)
-  canvas.configure(bg="white")
+def draw_large_purple_solid_square(canvas: object, startx: int, starty: int) -> None:
+  canvas.create_rectangle(startx, starty, startx+large_large, starty+large_large, fill="purple4")
 
-  # draw_solid_purple_large_square(canvas, 0, 0)
-  # draw_hollow_purple_large_square(canvas, 250, 0)
-  # draw_hollow_purple_small_square(canvas, 500, 0)
-  # draw_solid_purple_large_circle(canvas, 0, 250)
+def draw_large_purple_hollow_square(canvas: object, startx: int, starty: int) -> None:
+  canvas.create_rectangle(startx, starty, startx+large_large, starty+large_large, fill="purple4")
+  canvas.create_rectangle(startx+large_small, starty+large_small, startx+large_large-large_small, starty+large_large-large_small, outline="purple4", fill="mediumpurple1")
 
-  # # Cruse
-  # draw_solid_green_small_circle(canvas, 100, 500)
-  # draw_solid_purple_small_circle(canvas, 100, 600)
-  # draw_hollow_green_large_circle(canvas, 250, 250)
-  # draw_hollow_purple_large_circle(canvas, 500, 250)
-  # draw_hollow_green_small_circle(canvas, 250, 500)
-  # draw_hollow_purple_small_circle(canvas, 400, 500)
+def draw_large_purple_solid_circle(canvas: object, startx: int, starty: int) -> None:
+  canvas.create_oval(startx, starty, startx+large_large, starty+large_large, fill="purple4")
 
-  # draw_solid_green_large_square(canvas, 0, 0)
-  # draw_hollow_green_large_square(canvas, 0, 0)
-  # draw_hollow_green_small_square(canvas, 300, 300)
-  # draw_solid_green_large_circle(canvas, 2, 2)
+def draw_large_purple_hollow_circle(canvas: object, startx: int, starty: int) -> None:
+    canvas.create_oval(startx, starty, startx+large_large, starty+large_large, fill="purple4", outline="purple4", width=2)
+    canvas.create_oval(startx+large_small, starty+large_small, startx+large_large-large_small, starty+large_large-large_small, fill="mediumpurple1", outline="purple4", width=2)
 
-  root.mainloop()
+def draw_small_purple_solid_square(canvas: object, startx: int, starty: int) -> None:
+  canvas.create_rectangle(startx, starty, startx+small_large, starty+small_large, fill="purple4")
 
-create_board()
-# test()
+def draw_small_purple_hollow_square(canvas: object, startx: int, starty: int) -> None:
+  canvas.create_rectangle(startx, starty, startx+small_large, starty+small_large, fill="purple4")
+  canvas.create_rectangle(startx+small_small, starty+small_small, startx+small_large-small_small, starty+small_large - small_small, outline="purple4", fill="mediumpurple1")
+
+def draw_small_purple_solid_circle(canvas: object, startx: int, starty: int) -> None:
+    canvas.create_oval(startx, starty, startx+small_large, starty+small_large, fill="purple4")
+
+def draw_small_purple_hollow_circle(canvas: object, startx: int, starty: int) -> None:
+    canvas.create_oval(startx, starty, startx+small_large, starty+small_large, fill="purple4", outline="purple4", width=2)
+    canvas.create_oval(startx+small_small, starty+small_small, startx+small_large-small_small, starty+small_large - small_small, fill="mediumpurple1", outline="purple4", width=2)
+
+def draw_large_green_solid_square(canvas: object, startx: int, starty: int) -> None:
+  canvas.create_rectangle(startx, starty, startx+large_large, starty+large_large, fill="seagreen")
+
+def draw_large_green_hollow_square(canvas: object, startx: int, starty: int) -> None:
+  canvas.create_rectangle(startx, starty, startx+large_large, starty+large_large, fill="seagreen")
+  canvas.create_rectangle(startx+large_small, starty+large_small, startx+large_large-large_small, starty+large_large-large_small, outline="seagreen", fill="mediumseagreen")
+
+def draw_large_green_solid_circle(canvas: object, startx: int, starty: int) -> None:
+  canvas.create_oval(startx, starty, startx+large_large, starty+large_large, fill="seagreen")
+
+def draw_large_green_hollow_circle(canvas: object, startx: int, starty: int) -> None:
+    canvas.create_oval(startx, starty, startx+large_large, starty+large_large, fill="seagreen", outline="seagreen", width=2)
+    canvas.create_oval(startx+large_small, starty+large_small, startx+large_large-large_small, starty+large_large-large_small, fill="mediumseagreen", outline="seagreen", width=2)
+
+def draw_small_green_solid_square(canvas: object, startx: int, starty: int) -> None:
+  canvas.create_rectangle(startx, starty, startx+small_large, starty+small_large, fill="seagreen")
+
+def draw_small_green_hollow_square(canvas: object, startx: int, starty: int) -> None:
+  canvas.create_rectangle(startx, starty, startx+small_large, starty+small_large, fill="seagreen")
+  canvas.create_rectangle(startx+small_small, starty+small_small, startx+small_large-small_small, starty+small_large - small_small, outline="seagreen", fill="mediumseagreen")
+
+def draw_small_green_solid_circle(canvas: object, startx: int, starty: int) -> None:
+    canvas.create_oval(startx, starty, startx+small_large, starty+small_large, fill="seagreen")
+
+def draw_small_green_hollow_circle(canvas: object, startx: int, starty: int) -> None:
+    canvas.create_oval(startx, starty, startx+small_large, starty+small_large, fill="seagreen", outline="seagreen", width=2)
+    canvas.create_oval(startx+small_small, starty+small_small, startx+small_large-small_small, starty+small_large - small_small, fill="mediumseagreen", outline="seagreen", width=2)
+
+def draw_piece(canvas: object, piece: str, startx: int, starty: int) -> None:
+  peice_functions = {
+        "lpss": draw_large_purple_solid_square,
+        "spss": draw_small_purple_solid_square,
+        "lphs": draw_large_purple_hollow_square,
+        "sphc": draw_small_purple_hollow_circle,
+        "lpsc": draw_large_purple_solid_circle,
+        "sgsc": draw_small_green_solid_circle,
+        "spsc": draw_small_purple_solid_circle,
+        "lghc": draw_large_green_hollow_circle,
+        "lphc": draw_large_purple_hollow_circle,
+        "sghc": draw_small_green_hollow_circle,
+        "sphs": draw_small_purple_hollow_square,
+        "lgss": draw_large_green_solid_square,
+        "sgss": draw_small_green_solid_square,
+        "lghs": draw_large_green_hollow_square,
+        "sghs": draw_small_green_hollow_square,
+        "lgsc": draw_large_green_solid_circle,
+    }
+  if piece in peice_functions:
+        peice_functions[piece](canvas, startx, starty)
+  else:
+        print(f"Error: Unknown piece name '{piece}'")
+
+draw_board()
