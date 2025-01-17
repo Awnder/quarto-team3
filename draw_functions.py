@@ -16,7 +16,7 @@ def draw_large_purple_hollow_square(canvas: object, startx: int, starty: int) ->
   canvas.create_rectangle(startx, starty, startx+outer_large_size, starty+outer_large_size, fill="purple")
   canvas.create_rectangle(startx+outer_small_size, starty+outer_small_size, startx+inner_large_size, starty+inner_large_size, fill="white")
 
-def draw_small_purple_hollow_circle(canvas: object, startx: int, starty: int) -> None:
+def draw_small_purple_hollow_square(canvas: object, startx: int, starty: int) -> None:
   canvas.create_rectangle(startx, starty, startx+outer_small_size, starty+outer_small_size, fill="purple")
   canvas.create_rectangle(startx+inner_large_size, starty+inner_large_size, startx+inner_small_size, starty+inner_small_size, fill="white")
 
@@ -33,7 +33,7 @@ def draw_large_green_hollow_circle(canvas: object, startx: int, starty: int) -> 
     canvas.create_oval(startx, starty, startx+outer_large_size, starty+outer_large_size, fill="green", outline="green", width=2)
     canvas.create_oval(startx+outer_small_size, starty+outer_small_size, startx+inner_large_size, starty+inner_large_size, fill="white", outline="green", width=2)
   
-def def_large_purple_hollow_circle(canvas: object, startx: int, starty: int) -> None:
+def draw_large_purple_hollow_circle(canvas: object, startx: int, starty: int) -> None:
     canvas.create_oval(startx, starty, startx+outer_large_size, starty+outer_large_size, fill="purple", outline="purple", width=2)
     canvas.create_oval(startx+outer_small_size, starty+outer_small_size, startx+inner_large_size, starty+inner_large_size, fill="white", outline="purple", width=2)
 
@@ -68,12 +68,12 @@ def draw_piece(canvas: object, piece: str, startx: int, starty: int) -> None:
         "large_purple_solid_square": draw_large_purple_solid_square,
         "small_purple_solid_square": draw_small_purple_solid_square,
         "large_purple_hollow_square": draw_large_purple_hollow_square,
-        "small_purple_hollow_circle": draw_small_purple_hollow_circle,
+        "small_purple_hollow_square": draw_small_purple_hollow_square,
         "large_purple_solid_circle": draw_large_purple_solid_cricle,
         "small_green_solid_circle": draw_small_green_solid_circle,
         "small_purple_solid_circle": draw_small_purple_solid_circle,
         "large_green_hollow_circle": draw_large_green_hollow_circle,
-        "large_purple_hollow_circle": def_large_purple_hollow_circle,
+        "large_purple_hollow_circle": draw_large_purple_hollow_circle,
         "small_green_hollow_circle": draw_small_green_hollow_circle,
         "small_purple_hollow_circle": draw_small_purple_hollow_circle,
         "large_green_solid_square": draw_large_green_solid_square,
