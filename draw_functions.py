@@ -9,9 +9,11 @@ class Quarto:
     self.small_large = 50
     self.large_small = 25
     self.large_large = 100
+    self.selected_piece = None  # Stores the currently selected piece's tag
     self.draw_board()
     self.board = [[None for _ in range(4)] for _ in range(4)] # creates a list of lists with 4 rows and 4 columns to fill in with pieces
     self.bind_highlight()
+    self.bind_clicks()
     self.root.mainloop()
 
   def init_root(self) -> tkinter.Tk:
@@ -69,6 +71,70 @@ class Quarto:
         self.canvas.tag_bind(ids[1], "<Enter>", lambda event, id=ids[0]: self.highlight(event, id))
         self.canvas.tag_bind(ids[1], "<Leave>", lambda event, id=ids[0]: self.unhighlight(event, id))
     
+  def bind_clicks(self):
+        ''' Binds mouse clicks for selecting and placing pieces. '''
+        for id in self.canvas.find_all():
+            tags = self.canvas.gettags(id)
+            if tags and not tags[0].startswith("board-"):
+                # Bind piece selection
+                self.canvas.tag_bind(id, "<Button-1>", lambda event, id=id: self.select_piece(event, id))
+            elif tags and tags[0].startswith("board-"):
+                # Bind grid slot placement
+                self.canvas.tag_bind(id, "<Button-1>", lambda event, id=id: self.place_piece(event, id))
+  
+  def select_piece(self, event, id):
+        ''' Selects a piece if clicked. '''
+        self.selected_piece = id
+        print(f"Piece selected: {self.canvas.gettags(id)}")
+        
+  def place_piece(self, event, id):
+    ''' Places a selected piece on an empty grid slot. '''
+    if not self.selected_piece:
+        print("No piece selected!")
+        return
+
+    # Get the grid slot tag
+    tags = self.canvas.gettags(id)
+    if tags and tags[0].startswith("board-"):
+        _, i, j = tags[0].split("-")
+        i, j = int(i), int(j)
+
+        # Check if the slot is empty
+        if self.board[j][i] is None:
+            # Get grid slot coordinates
+            x1, y1, x2, y2 = self.canvas.coords(id)
+            slot_center_x = (x1 + x2) / 2
+            slot_center_y = (y1 + y2) / 2
+            print(f"Grid Slot ({i}, {j}) Center: ({slot_center_x}, {slot_center_y})")
+
+            # Get the selected piece's bounding box
+            piece_coords = self.canvas.bbox(self.selected_piece)
+            if piece_coords:
+                piece_center_x = (piece_coords[0] + piece_coords[2]) / 2
+                piece_center_y = (piece_coords[1] + piece_coords[3]) / 2
+                print(f"Piece Center: ({piece_center_x}, {piece_center_y})")
+
+                # Calculate offsets to center the piece in the grid slot
+                offset_x = slot_center_x - piece_center_x
+                offset_y = slot_center_y - piece_center_y
+
+                # Move the piece
+                self.canvas.move(self.selected_piece, offset_x, offset_y)
+                self.canvas.tag_raise(self.selected_piece)  # Bring piece to the foreground
+                self.canvas.update()  # Refresh canvas
+
+                # Mark the board as occupied
+                self.board[j][i] = self.selected_piece
+                print(f"Placed piece {self.canvas.gettags(self.selected_piece)} at ({i}, {j})")
+
+                # Deselect the piece
+                self.selected_piece = None
+            else:
+                print("Error: Could not get selected piece coordinates!")
+        else:
+            print(f"Slot ({i}, {j}) is already occupied!")
+
+  
   def highlight(self, event, id):
     ''' change border color to yellow and increase width of border upon mouseover '''
     self.canvas.itemconfig(id, outline="yellow", width=3)
