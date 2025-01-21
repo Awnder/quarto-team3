@@ -10,6 +10,7 @@ class Quarto:
     self.large_small = 25
     self.large_large = 100
     self.selected_piece = None  # Stores the currently selected piece's tag
+    self.piece_played = {}
     self.draw_board()
     self.board = [[None for _ in range(4)] for _ in range(4)] # creates a list of lists with 4 rows and 4 columns to fill in with pieces
     self.bind_highlight()
@@ -33,21 +34,37 @@ class Quarto:
   def draw_board(self) -> None:
     ''' draws all pieces and board '''
     self.draw_piece("lpss", 250, 75)
+    self.piece_played["lpss"] = False
     self.draw_piece("lpsc", 250, 305)
+    self.piece_played["lpsc"] = False
     self.draw_piece("spss", 275, 535)
+    self.piece_played["spss"] = False
     self.draw_piece("spsc", 275, 665)
+    self.piece_played["spsc"] = False
     self.draw_piece("lphs", 250, 190)
+    self.piece_played["lphs"] = False
     self.draw_piece("lphc", 250, 420)
+    self.piece_played["lphc"] = False
     self.draw_piece("sphs", 275, 600)
+    self.piece_played["sphs"] = False
     self.draw_piece("sphc", 275, 730)
+    self.piece_played["sphc"] = False
     self.draw_piece("lgss", 50, 75)
+    self.piece_played["lgss"] = False
     self.draw_piece("lgsc", 50, 305)
+    self.piece_played["lgsc"] = False
     self.draw_piece("sgss", 75, 535)
+    self.piece_played["sgss"] = False
     self.draw_piece("sgsc", 75, 665)
+    self.piece_played["sgsc"] = False
     self.draw_piece("lghs", 50, 190)
+    self.piece_played["lghs"] = False
     self.draw_piece("lghc", 50, 420)
+    self.piece_played["lghc"] = False
     self.draw_piece("sghs", 75, 600)
+    self.piece_played["sghs"] = False
     self.draw_piece("sghc", 75, 730)
+    self.piece_played["sghc"] = False
     
     # have to draw 16 rectangles instead of lines in order to highlight them upon mouseover
     for i in range(4):
@@ -122,6 +139,7 @@ class Quarto:
             # Mark the board as occupied
             self.board[j][i] = self.selected_piece
             print(f"Placed piece {self.selected_piece} at ({i}, {j})")
+            self.piece_played[self.selected_piece] = True
 
             # Deselect the piece
             self.selected_piece = None
