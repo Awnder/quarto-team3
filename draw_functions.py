@@ -92,17 +92,20 @@ class Quarto:
     ''' Binds mouse clicks for selecting and placing pieces. '''
     for id in self.canvas.find_all():
         tags = self.canvas.gettags(id)
-        if tags and not tags[0].startswith("board-"):
+        if tags and not tags[0].startswith("board-") and not tags[0].startswith("category-"):
             # Bind piece selection to the first tag of the piece
             self.canvas.tag_bind(tags[0], "<Button-1>", lambda event, tag=tags[0]: self.select_piece(event, tag))
-        elif tags and tags[0].startswith("board-"):
+        elif tags and tags[0].startswith("board-") and not tags[0].startswith("category-"):
             # Bind grid slot placement
             self.canvas.tag_bind(tags[0], "<Button-1>", lambda event, tag=tags[0]: self.place_piece(event, tag))
   
   def select_piece(self, event, tag):
     ''' Selects a piece if clicked. '''
-    self.selected_piece = tag
-    print(f"Piece selected: {self.selected_piece}")
+    if self.piece_played[tag]:
+      print(f"Piece {tag} has already been played!")
+    else:
+      self.selected_piece = tag
+      print(f"Piece selected: {self.selected_piece}")
         
   def place_piece(self, event, tag):
     ''' Places a selected piece on an empty grid slot. '''
@@ -148,7 +151,86 @@ class Quarto:
     else:
         print(f"Slot ({i}, {j}) is already occupied!")
 
-  
+    for i in range(4):
+      self._check_win_row(i)
+      self._check_win_col(i)
+
+  def _check_win_row(self, row: int) -> bool:
+    """ iterates through a given row to check for a win. returns True if there is a win, False otherwise """
+    # size, color, fill, shape
+    total_scores = [0, 0, 0, 0]
+    current_categories = [None, None, None, None]
+
+    for col in range(4):
+      if self.board[row][col] is None: 
+        continue
+      else:
+        tag = self.canvas.gettags(self.board[row][col])[0]
+
+        total_scores, current_categories = self._check_win_tag_identifier(total_scores, current_categories, tag)
+
+        print(f'check win {tag} at ({row},{col}) count_size: {total_scores[0]}, count_color: {total_scores[1]}, count_fill: {total_scores[2]}, count_shape: {total_scores[3]}')
+
+      if total_scores[0] == 4 or total_scores[1] == 4 or total_scores[2] == 4 or total_scores[3] == 4:
+        return True
+    return False
+
+  def _check_win_col(self, col: int) -> bool:
+    """ iterates through a given column to check for a win. returns True if there is a win, False otherwise """
+    # size, color, fill, shape
+    total_scores = [0, 0, 0, 0]
+    current_categories = [None, None, None, None]
+
+    for row in range(4):
+      if self.board[row][col] is None:
+        continue
+      else:
+        tag = self.canvas.gettags(self.board[row][col])[0]
+
+        total_scores, current_categories = self._check_win_tag_identifier(total_scores, current_categories, tag)
+
+        print(f'check win {tag} at ({row},{col}) count_size: {total_scores[0]}, count_color: {total_scores[1]}, count_fill: {total_scores[2]}, count_shape: {total_scores[3]}')
+
+      if total_scores[0] == 4 or total_scores[1] == 4 or total_scores[2] == 4 or total_scores[3] == 4:
+        return True
+    return False
+
+  def _check_win_tag_identifier(self, total_scores: list[int], current_categories: list[str], tag: list[str]) -> list[list[int], list[str]]:
+    """ 
+    checks to see if the tag matches the current category and updates the total scores and current categories accordingly 
+    Parameters:
+      total_scores: list[int] - the list of total scores for each category
+      current_categories: list[str] - the list of current categories for each category
+      tag: list[str] - the tag to check against the current categories
+    Returns:
+      total_scores: list[int] - the updated list of total scores for each category
+      current_categories: list[str] - the updated list of current categories for each category
+    """
+    if tag[0] == current_categories[0]:
+      total_scores[0] += 1
+    else:
+      total_scores[0] = 1
+      current_categories[0] = tag[0]
+
+    if tag[1] == current_categories[1]:
+      total_scores[1] += 1
+    else:
+      total_scores[1] = 1
+      current_categories[1] = tag[1]
+
+    if tag[2] == current_categories[2]:
+      total_scores[2] += 1
+    else:
+      total_scores[2] = 1
+      current_categories[2] = tag[2]
+
+    if tag[3] == current_categories[3]:
+      total_scores[3] += 1
+    else:
+      total_scores[3] = 1
+      current_categories[3] = tag[3]
+    return total_scores, current_categories
+   
   def highlight(self, event, id):
     ''' change border color to yellow and increase width of border upon mouseover '''
     self.canvas.itemconfig(id, outline="yellow", width=3)
