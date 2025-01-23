@@ -230,7 +230,45 @@ class Quarto:
       total_scores[3] = 1
       current_categories[3] = tag[3]
     return total_scores, current_categories
-   
+
+  def _check_win_diagonal(self, diagonal: str) -> bool:
+    pass
+  
+  def _check_win_wrapper(self, row=None, col=None, diagonal=None) -> bool:
+    """
+    Wrapper function to check if a player has won based on the given row, column, or diagonal.
+    At least one of row, col, or diagonal should be specified.
+    """
+    if row is not None:
+        return self._check_win_row(row)
+    if col is not None:
+        return self._check_win_col(col)
+    if diagonal is not None:
+        return self._check_win_diagonal(diagonal)
+
+    return False
+
+  def _check_win_any(self) -> bool:
+    """
+    Checks if a player has won in any row, column, or diagonal.
+    Returns True if any winning condition is met.
+    """
+    # Check all rows
+    for row in range(4):
+        if self._check_win_row(row):
+            return True
+
+    # Check all columns
+    for col in range(4):
+        if self._check_win_col(col):
+            return True
+
+    # Check both diagonals
+    if self._check_win_diagonal("main") or self._check_win_diagonal("anti"):
+        return True
+
+    return False
+  
   def highlight(self, event, id):
     ''' change border color to yellow and increase width of border upon mouseover '''
     self.canvas.itemconfig(id, outline="yellow", width=3)
