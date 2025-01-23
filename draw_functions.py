@@ -154,17 +154,6 @@ class Quarto:
     for i in range(4):
       self._check_win_row(i)
       self._check_win_col(i)
-
-  def check_specific_win(self, row_col_diag: str, category: str) -> bool:
-    """
-    Checks if a player has won in a specific row, column, or diagonal.
-    Parameters:
-      row_col_diag (str): the row, column, or diagonal to check (row, col, diagonal)
-      category: (str): the category to check for a win (size, color, fill, shape)
-    Returns:
-      bool: True if a player has won in a specific category, False otherwise
-    """
-    pass
     
 
   def _check_win_row(self, row: int) -> bool:
