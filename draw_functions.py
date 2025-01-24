@@ -75,7 +75,9 @@ class Quarto:
     self.root = tk.Tk()
     self.root.title('Quarto Game')
     self.root.geometry('2400x1600')
-    self.init_canvas()
+    self.canvas = tk.Canvas(self.root)
+    self.canvas.pack(fill=tk.BOTH, expand=1)
+    self.canvas.configure(bg="white")
 
     self.player1 = player1_name.get()
     self.player2 = player2_name.get()
@@ -84,12 +86,6 @@ class Quarto:
     self.bind_highlight()
     self.bind_clicks()
     self.board = [[None for _ in range(4)] for _ in range(4)] # creates a list of lists with 4 rows and 4 columns to fill in with pieces
-
-  def init_canvas(self):
-    ''' returns a tkinter canvas '''
-    self.canvas = tk.Canvas(self.root)
-    self.canvas.pack(fill=tk.BOTH, expand=1)
-    self.canvas.configure(bg="white")
 
   def draw_board(self) -> None:
     ''' draws all pieces and board '''
