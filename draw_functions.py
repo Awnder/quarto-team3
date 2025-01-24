@@ -58,10 +58,6 @@ class Quarto:
     player2_name_label.pack(pady=25)
     player2_name_entry.pack()
     submit_button.pack(pady=10)
-
-  def validate_name_input(self, value: str):
-    """ ensure that users can't input blank names """
-    pass
   
   def init_game_screen(self, player1_name: tk.StringVar, player2_name: tk.StringVar):
     """ 
@@ -79,8 +75,17 @@ class Quarto:
     self.canvas.pack(fill=tk.BOTH, expand=1)
     self.canvas.configure(bg="white")
 
-    self.player1 = player1_name.get()
-    self.player2 = player2_name.get()
+    player1 = player1_name.get()
+    player2 = player2_name.get()
+
+    if player1.strip() == "":
+      self.player1 = 'Player 1'
+    else:
+      self.player1 = player1
+    if player2.strip() == "":
+      self.player2 = 'Player 2'
+    else:
+      self.player2 = player2
 
     self.draw_board()
     self.bind_highlight()
