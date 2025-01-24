@@ -24,7 +24,7 @@ class Quarto:
 
     self.root.mainloop()
 
-  def init_menu_screen(self) -> tkinter.Tk:
+  def init_menu_screen(self):
     """ 
     creates a start screen for the game so players can input their names. 
     the goal is after this first creation tkinter will juggle between the menu and gameboard screen 
