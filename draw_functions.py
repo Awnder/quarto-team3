@@ -3,33 +3,93 @@ import tkinter.ttk
 
 class Quarto:
   def __init__(self):
-    self.root = self.init_root()
-    self.canvas = self.init_canvas()
+    # initalize menu and game tk screens
+    self.root = None
+    self.canvas = None
+    self.board = None
+
+    # players
+    self.player1 = None
+    self.player2 = None
+
+    # pieces
     self.small_small = 15
     self.small_large = 50
     self.large_small = 25
     self.large_large = 100
     self.selected_piece = None  # Stores the currently selected piece's tag
     self.piece_played = {}
-    self.draw_board()
-    self.board = [[None for _ in range(4)] for _ in range(4)] # creates a list of lists with 4 rows and 4 columns to fill in with pieces
-    self.bind_highlight()
-    self.bind_clicks()
+
+    self.init_menu_screen() # start game here at menu
+
     self.root.mainloop()
 
-  def init_root(self) -> tkinter.Tk:
-    ''' returns a tkinter root window '''
-    root = tk.Tk()
-    root.title('Game Board')
-    root.geometry('2400x1600')
-    return root
+  def init_menu_screen(self) -> tkinter.Tk:
+    """ 
+    creates a start screen for the game so players can input their names. 
+    the goal is after this first creation tkinter will juggle between the menu and gameboard screen 
+    """
+    if self.root:
+      self.root.destroy()
+
+    # recreate tk interface for game menu
+    self.root = tk.Tk()
+    self.root.title("Quarto Menu")
+    self.root.geometry("600x400")
+
+    player1_name = tk.StringVar()
+    player2_name = tk.StringVar()
+
+    title = tk.Label(self.root, text="Welcome to Quarto", font=('Courier', 25, 'bold'))
+    instruction = tk.Label(self.root, text="Enter Player Names to Begin!", font=('Courier', 15, 'normal'))
+
+    player1_name_label = tk.Label(self.root, text="Player 1 Name", font=('Courier', 15, 'bold'), fg="green")
+    player2_name_label = tk.Label(self.root, text="Player 2 Name", font=('Courier', 15, 'bold'), fg="purple")
+
+    player1_name_entry = tk.Entry(self.root, textvariable=player1_name, font=('Courier', 12, 'normal'), fg="green")
+    player2_name_entry = tk.Entry(self.root, textvariable=player2_name, font=('Courier', 12, 'normal'), fg="purple")
+
+    submit_button = tk.Button(self.root, text="Start Game", command=lambda: self.init_game_screen(player1_name, player2_name))
+
+    title.pack(pady=20)
+    instruction.pack()
+    player1_name_label.pack(pady=25)
+    player1_name_entry.pack()
+    player2_name_label.pack(pady=25)
+    player2_name_entry.pack()
+    submit_button.pack(pady=10)
+
+  def validate_name_input(self, value: str):
+    """ ensure that users can't input blank names """
+    pass
   
-  def init_canvas(self) -> tkinter.Canvas:
+  def init_game_screen(self, player1_name: tk.StringVar, player2_name: tk.StringVar):
+    """ 
+    creates a game screen so players can play quarto 
+    the goal is upon game end, tkinter will juggle between the menu and gameboard screen 
+    """
+    if self.root:
+      self.root.destroy()
+
+    # recreate tk interface for the game board
+    self.root = tk.Tk()
+    self.root.title('Quarto Game')
+    self.root.geometry('2400x1600')
+    self.init_canvas()
+
+    self.player1 = player1_name.get()
+    self.player2 = player2_name.get()
+
+    self.draw_board()
+    self.bind_highlight()
+    self.bind_clicks()
+    self.board = [[None for _ in range(4)] for _ in range(4)] # creates a list of lists with 4 rows and 4 columns to fill in with pieces
+
+  def init_canvas(self):
     ''' returns a tkinter canvas '''
-    canvas = tk.Canvas(self.root)
-    canvas.pack(fill=tk.BOTH, expand=1)
-    canvas.configure(bg="white")
-    return canvas
+    self.canvas = tk.Canvas(self.root)
+    self.canvas.pack(fill=tk.BOTH, expand=1)
+    self.canvas.configure(bg="white")
 
   def draw_board(self) -> None:
     ''' draws all pieces and board '''
@@ -72,7 +132,7 @@ class Quarto:
         # instead of 200, use 202 to create 2px extra space between squares so highlight doesn't overlap
         id = self.canvas.create_rectangle(400 + 202 * i, 50 + 202 * j, 600 + 202 * i, 250 + 202 * j, fill="white", outline="black", width=1)
         self.canvas.addtag_withtag(f"board-{i}-{j}", id)
-
+    
   def bind_highlight(self):
     ''' binds the highlight and unhighlight functions to all tags '''
     all_tags = []
