@@ -78,6 +78,7 @@ class Quarto:
     player1 = player1_name.get()
     player2 = player2_name.get()
 
+    # if player name is empty just default to Player 1 or Player 2
     if player1.strip() == "":
       self.player1 = 'Player 1'
     else:
@@ -91,6 +92,9 @@ class Quarto:
     self.bind_highlight()
     self.bind_clicks()
     self.board = [[None for _ in range(4)] for _ in range(4)] # creates a list of lists with 4 rows and 4 columns to fill in with pieces
+
+    close_button = tk.Button(self.root, text="Close", command=lambda: self.init_menu_screen())
+    close_button.pack(side=tk.BOTTOM)
 
   def draw_board(self) -> None:
     ''' draws all pieces and board '''
