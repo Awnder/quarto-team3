@@ -36,20 +36,21 @@ class Quarto:
     self.root = tk.Tk()
     self.root.title("Quarto Menu")
     self.root.geometry("600x400")
+    self.root.configure(bg = "black")
 
     player1_name = tk.StringVar()
     player2_name = tk.StringVar()
 
-    title = tk.Label(self.root, text="Welcome to Quarto", font=('Courier', 25, 'bold'))
-    instruction = tk.Label(self.root, text="Enter Player Names to Begin!", font=('Courier', 15, 'normal'))
+    title = tk.Label(self.root, text="Welcome to Quarto", font=('Courier', 25, 'bold'), bg="black")
+    instruction = tk.Label(self.root, text="Enter Player Names to Begin!", font=('Courier', 15, 'normal'), bg="black")
 
-    player1_name_label = tk.Label(self.root, text="Player 1 Name", font=('Courier', 15, 'bold'), fg="green")
-    player2_name_label = tk.Label(self.root, text="Player 2 Name", font=('Courier', 15, 'bold'), fg="purple")
+    player1_name_label = tk.Label(self.root, text="Player 1 Name", font=('Courier', 15, 'bold'), fg="seagreen", bg="black")
+    player2_name_label = tk.Label(self.root, text="Player 2 Name", font=('Courier', 15, 'bold'), fg="purple4", bg="black")
 
-    player1_name_entry = tk.Entry(self.root, textvariable=player1_name, font=('Courier', 12, 'normal'), fg="green")
-    player2_name_entry = tk.Entry(self.root, textvariable=player2_name, font=('Courier', 12, 'normal'), fg="purple")
+    player1_name_entry = tk.Entry(self.root, textvariable=player1_name, font=('Courier', 12, 'normal'), fg="seagreen", bg="grey")
+    player2_name_entry = tk.Entry(self.root, textvariable=player2_name, font=('Courier', 12, 'normal'), fg="purple4", bg="grey")
 
-    submit_button = tk.Button(self.root, text="Start Game", command=lambda: self.init_game_screen(player1_name, player2_name))
+    submit_button = tk.Button(self.root, text="Start Game", command=lambda: self.init_game_screen(player1_name, player2_name), bg="grey")
 
     title.pack(pady=20)
     instruction.pack()
@@ -260,6 +261,42 @@ class Quarto:
       if total_scores[0] == 4 or total_scores[1] == 4 or total_scores[2] == 4 or total_scores[3] == 4:
         return True
     return False
+  
+  def _check_win_diagonal(self, diagonal: str) -> bool:
+    total_scores = [0, 0, 0, 0]
+    current_categories = [None, None, None, None]
+
+    main = [(0, 0), (1, 1), (2,2), (3, 3)]
+    anti = [(3, 0), (2, 1), (1, 2), (0, 3)]
+    if diagonal == 'main':
+      for row, col in main:
+        if self.board[row][col] is None:
+          continue
+        else:
+          tag = self.canvas.gettags(self.board[row][col])[0]
+
+          total_scores, current_categories = self._check_win_tag_identifier(total_scores, current_categories, tag)
+
+          print(f'check win {tag} at ({row},{col}) count_size: {total_scores[0]}, count_color: {total_scores[1]}, count_fill: {total_scores[2]}, count_shape: {total_scores[3]}')
+
+      if total_scores[0] == 4 or total_scores[1] == 4 or total_scores[2] == 4 or total_scores[3] == 4:
+        return True
+    if diagonal == 'anti':
+      for row, col in anti:
+        if self.board[row][col] is None:
+          continue
+        else:
+          tag = self.canvas.gettags(self.board[row][col])[0]
+
+          total_scores, current_categories = self._check_win_tag_identifier(total_scores, current_categories, tag)
+
+          print(f'check win {tag} at ({row},{col}) count_size: {total_scores[0]}, count_color: {total_scores[1]}, count_fill: {total_scores[2]}, count_shape: {total_scores[3]}')
+
+      if total_scores[0] == 4 or total_scores[1] == 4 or total_scores[2] == 4 or total_scores[3] == 4:
+        return True
+      return False
+
+
 
   def _check_win_tag_identifier(self, total_scores: list[int], current_categories: list[str], tag: list[str]) -> list[list[int], list[str]]:
     """ 
