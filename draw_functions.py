@@ -11,6 +11,8 @@ class Quarto:
     # players
     self.player1 = None
     self.player2 = None
+    self.turn = None
+    self.player_display = None
 
     # pieces
     self.small_small = 15
@@ -76,26 +78,32 @@ class Quarto:
     self.canvas.pack(fill=tk.BOTH, expand=1)
     self.canvas.configure(bg="white")
 
-    player1 = player1_name.get()
-    player2 = player2_name.get()
-
     # if player name is empty just default to Player 1 or Player 2
-    if player1.strip() == "":
+    if player1_name.get().strip() == "":
       self.player1 = 'Player 1'
     else:
-      self.player1 = player1
-    if player2.strip() == "":
+      self.player1 = player1_name.get()
+    if player2_name.get().strip() == "":
       self.player2 = 'Player 2'
     else:
-      self.player2 = player2
+      self.player2 = player2_name.get()
+    self.turn = self.player1
 
     self.draw_board()
     self.bind_highlight()
     self.bind_clicks()
     self.board = [[None for _ in range(4)] for _ in range(4)] # creates a list of lists with 4 rows and 4 columns to fill in with pieces
-
-    close_button = tk.Button(self.root, text="Close", command=lambda: self.init_menu_screen())
+    
+    self.player_display = tk.Label(self.root, text=f"{self.turn}'s Turn", font=('Courier', 15, 'bold'), fg="seagreen")
+    close_button = tk.Button(self.root, text="Close", command=self.init_menu_screen)
+    self.player_display.pack(side=tk.TOP)    
     close_button.pack(side=tk.BOTTOM)
+
+  def change_turn(self):
+    """ changes color, turn, and player display on each turn """
+    color = "purple4" if self.turn == self.player1 else "seagreen"
+    self.turn = self.player1 if self.turn == self.player2 else self.player2
+    self.player_display.config(text=f"{self.turn}'s Turn", fg=color)
 
   def draw_board(self) -> None:
     ''' draws all pieces and board '''
@@ -217,10 +225,7 @@ class Quarto:
     else:
         print(f"Slot ({i}, {j}) is already occupied!")
 
-    for i in range(4):
-      self._check_win_row(i)
-      self._check_win_col(i)
-    
+    self.change_turn()    
 
   def _check_win_row(self, row: int) -> bool:
     """ iterates through a given row to check for a win. returns True if there is a win, False otherwise """
