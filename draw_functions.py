@@ -98,6 +98,8 @@ class Quarto:
     close_button = tk.Button(self.root, text="Close", command=self.init_menu_screen)
     self.player_display.pack(side=tk.TOP)    
     close_button.pack(side=tk.BOTTOM)
+    self.claim_button = tk.Button(self.game_frame, text="Claim Victory", command=self.claim_victory)
+    self.claim_button.grid(row=1, column=1, columnspan=2)
 
   def change_turn(self):
     """ changes color, turn, and player display on each turn """
@@ -338,10 +340,7 @@ class Quarto:
       total_scores[3] = 1
       current_categories[3] = tag[3]
     return total_scores, current_categories
-
-  def _check_win_diagonal(self, diagonal: str) -> bool:
-    pass
-  
+    
   def _check_win_wrapper(self, row=None, col=None, diagonal=None) -> bool:
     """
     Wrapper function to check if a player has won based on the given row, column, or diagonal.
@@ -376,7 +375,7 @@ class Quarto:
         return True
 
     return False
-  
+
   def highlight(self, event, id):
     ''' change border color to yellow and increase width of border upon mouseover '''
     self.canvas.itemconfig(id, outline="yellow", width=3)
