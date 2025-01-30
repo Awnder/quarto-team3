@@ -230,49 +230,54 @@ class Quarto:
 
     self.change_turn()    
 
-  def _check_win_row(self, row: int) -> bool:
+  def _check_win_row(self, row: int) -> tuple[list[str], bool]:
     """ iterates through a given row to check for a win. returns True if there is a win, False otherwise """
     # size, color, fill, shape
     total_scores = [0, 0, 0, 0]
     current_categories = [None, None, None, None]
+    current_tags = [None, None, None, None]
 
     for col in range(4):
       if self.board[row][col] is None: 
         continue
       else:
         tag = self.canvas.gettags(self.board[row][col])[0]
+        current_tags[col] = tag # store the tag for each piece in the row
 
         total_scores, current_categories = self._check_win_tag_identifier(total_scores, current_categories, tag)
 
         print(f'check win {tag} at ({row},{col}) count_size: {total_scores[0]}, count_color: {total_scores[1]}, count_fill: {total_scores[2]}, count_shape: {total_scores[3]}')
 
       if total_scores[0] == 4 or total_scores[1] == 4 or total_scores[2] == 4 or total_scores[3] == 4:
-        return self.turn, True
-    return False
+        return current_tags, True
+    return None, False
 
   def _check_win_col(self, col: int) -> bool:
     """ iterates through a given column to check for a win. returns True if there is a win, False otherwise """
     # size, color, fill, shape
     total_scores = [0, 0, 0, 0]
     current_categories = [None, None, None, None]
+    current_tags = [None, None, None, None]
 
     for row in range(4):
       if self.board[row][col] is None:
         continue
       else:
         tag = self.canvas.gettags(self.board[row][col])[0]
+        current_tags[row] = tag # store the tag for each piece in the column (we're iterating over the rows)
 
         total_scores, current_categories = self._check_win_tag_identifier(total_scores, current_categories, tag)
 
         print(f'check win {tag} at ({row},{col}) count_size: {total_scores[0]}, count_color: {total_scores[1]}, count_fill: {total_scores[2]}, count_shape: {total_scores[3]}')
 
       if total_scores[0] == 4 or total_scores[1] == 4 or total_scores[2] == 4 or total_scores[3] == 4:
-        return self.turn, True
-    return False
+        return current_tags, True
+    return None, False
   
-  def _check_win_diagonal(self, diagonal: str) -> bool:
+  def _check_win_diagonal(self, diagonal: str) -> tuple[list[str], bool]:
     total_scores = [0, 0, 0, 0]
     current_categories = [None, None, None, None]
+    current_tags = [None, None, None, None]
 
     main = [(0, 0), (1, 1), (2,2), (3, 3)]
     anti = [(3, 0), (2, 1), (1, 2), (0, 3)]
@@ -282,29 +287,29 @@ class Quarto:
           continue
         else:
           tag = self.canvas.gettags(self.board[row][col])[0]
+          current_tags[row] = tag # store the tag for each piece in the diagonal, doesn't matter if I use row or col
 
           total_scores, current_categories = self._check_win_tag_identifier(total_scores, current_categories, tag)
 
           print(f'check win {tag} at ({row},{col}) count_size: {total_scores[0]}, count_color: {total_scores[1]}, count_fill: {total_scores[2]}, count_shape: {total_scores[3]}')
 
       if total_scores[0] == 4 or total_scores[1] == 4 or total_scores[2] == 4 or total_scores[3] == 4:
-        return self.turn, True
+        return current_tags, True
     if diagonal == 'anti':
       for row, col in anti:
         if self.board[row][col] is None:
           continue
         else:
           tag = self.canvas.gettags(self.board[row][col])[0]
+          current_tags[row] = tag # store the tag for each piece in the diagonal, doesn't matter if I use row or col
 
           total_scores, current_categories = self._check_win_tag_identifier(total_scores, current_categories, tag)
 
           print(f'check win {tag} at ({row},{col}) count_size: {total_scores[0]}, count_color: {total_scores[1]}, count_fill: {total_scores[2]}, count_shape: {total_scores[3]}')
 
       if total_scores[0] == 4 or total_scores[1] == 4 or total_scores[2] == 4 or total_scores[3] == 4:
-        return self.turn, True
-      return False
-
-
+          return current_tags, True
+      return None, False
 
   def _check_win_tag_identifier(self, total_scores: list[int], current_categories: list[str], tag: list[str]) -> list[list[int], list[str]]:
     """ 
@@ -318,43 +323,43 @@ class Quarto:
       current_categories: list[str] - the updated list of current categories for each category
     """
     if tag[0] == current_categories[0]:
-      total_scores[0] += 1
+        total_scores[0] += 1
     else:
-      total_scores[0] = 1
-      current_categories[0] = tag[0]
+        total_scores[0] = 1
+        current_categories[0] = tag[0]
 
     if tag[1] == current_categories[1]:
-      total_scores[1] += 1
+        total_scores[1] += 1
     else:
-      total_scores[1] = 1
-      current_categories[1] = tag[1]
+        total_scores[1] = 1
+        current_categories[1] = tag[1]
 
     if tag[2] == current_categories[2]:
-      total_scores[2] += 1
+        total_scores[2] += 1
     else:
-      total_scores[2] = 1
-      current_categories[2] = tag[2]
+        total_scores[2] = 1
+        current_categories[2] = tag[2]
 
     if tag[3] == current_categories[3]:
-      total_scores[3] += 1
+        total_scores[3] += 1
     else:
-      total_scores[3] = 1
-      current_categories[3] = tag[3]
+        total_scores[3] = 1
+        current_categories[3] = tag[3]
     return total_scores, current_categories
   
-  def _check_win_wrapper(self, row=None, col=None, diagonal=None) -> bool:
+  def _check_win_wrapper(self, row=None, col=None, diagonal=None) -> tuple[list[str], bool]:
     """
     Wrapper function to check if a player has won based on the given row, column, or diagonal.
     At least one of row, col, or diagonal should be specified.
     """
     if row is not None:
-        return self._check_win_row(row)
+        return self._check_win_row(row) # returns tags, True if win / False if not
     if col is not None:
         return self._check_win_col(col)
     if diagonal is not None:
         return self._check_win_diagonal(diagonal)
 
-    return False
+    return None, False
 
   def _check_win_any(self) -> bool:
     """
@@ -362,29 +367,35 @@ class Quarto:
     Returns True if any winning condition is met.
     """
     for row in range(4):
-        if self._check_win_row(row):
-            return self.turn, True
+        row_result, won_or_lose = self._check_win_row(row)
+        if won_or_lose:
+            return row_result, True
 
     for col in range(4):
-        if self._check_win_col(col):
-            return self.turn, True
+        col_result, won_or_lose = self._check_win_col(col)
+        if won_or_lose:
+            return col_result, True
         
-    if self._check_win_diagonal("main") or self._check_win_diagonal("anti"):
-        return self.turn, True
-
-    return False
+    main_diag_result, won_or_lose = self._check_win_diagonal("main")
+    if won_or_lose:
+        return main_diag_result, True
+    anti_diag_result, won_or_lose = self._check_win_diagonal("anti")
+    if won_or_lose:  
+        return anti_diag_result, True
+  
+    return None, False
   
   def claim_victory(self):
     ''' Claims victory and highlights the winning pieces '''
-    winner, won_or_lose = self._check_win_any()
+    winning_tags, won_or_lose = self._check_win_any()
 
     if won_or_lose == True:
-        print(f"Player {winner} wins!")
-        #for piece in winning_pieces:
-            #piece_id = self.get_piece_id(piece)
-            #self.highlight(piece_id)
+        print(f"Player {self.turn} wins!")
+        for tag in winning_tags:
+            self.canvas.itemconfig(tag, outline="yellow", width=4)
+            print(f"Winning piece: {tag}")
 
-        messagebox.showinfo("Game Over", f"Player {winner} wins!")
+        messagebox.showinfo("Game Over", f"Player {self.turn} wins!")
     else:
         print("No winner yet!")
 
