@@ -98,8 +98,8 @@ class Quarto:
     close_button = tk.Button(self.root, text="Close", command=self.init_menu_screen)
     self.player_display.pack(side=tk.TOP)    
     close_button.pack(side=tk.BOTTOM)
-    self.claim_button = tk.Button(self.game_frame, text="Claim Victory", command=self.claim_victory)
-    self.claim_button.grid(row=1, column=1, columnspan=2)
+    self.claim_button = tk.Button(self.root, text="Claim Victory", command=self.claim_victory)
+    self.claim_button.pack(side=tk.RIGHT)
 
   def change_turn(self):
     """ changes color, turn, and player display on each turn """
@@ -360,21 +360,32 @@ class Quarto:
     Checks if a player has won in any row, column, or diagonal.
     Returns True if any winning condition is met.
     """
-    # Check all rows
     for row in range(4):
         if self._check_win_row(row):
             return True
 
-    # Check all columns
     for col in range(4):
         if self._check_win_col(col):
             return True
 
-    # Check both diagonals
     if self._check_win_diagonal("main") or self._check_win_diagonal("anti"):
         return True
 
     return False
+
+  def claim_victory(self):
+    ''' Claims victory and highlights the winning pieces '''
+    winner, winning_pieces = self._check_win_any()
+
+    if winner:
+        print(f"Player {winner} wins!")
+        for piece in winning_pieces:
+            piece_id = self.get_piece_id(piece)
+            self.highlight(piece_id)
+
+        self.display_victory_message(winner)
+    else:
+        print("No winner yet!")
 
   def highlight(self, event, id):
     ''' change border color to yellow and increase width of border upon mouseover '''
