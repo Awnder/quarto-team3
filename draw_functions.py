@@ -54,14 +54,17 @@ class Quarto:
 
     submit_button = tk.Button(self.root, text="Start Game", command=lambda: self.init_game_screen(player1_name, player2_name), bg="grey")
 
-    title.pack(pady=20)
-    instruction.pack()
-    player1_name_label.pack(pady=25)
-    player1_name_entry.pack()
-    player2_name_label.pack(pady=25)
-    player2_name_entry.pack()
-    submit_button.pack(pady=10)
-  
+    self.root.columnconfigure(0, weight=1)
+    self.root.columnconfigure(1, weight=1)
+
+    title.grid(row=0, column=0, columnspan=2, pady=20)
+    instruction.grid(row=1, column=0, columnspan=2)
+    player1_name_label.grid(row=2, column=0, padx=10, pady=10, sticky="e")
+    player1_name_entry.grid(row=2, column=1, padx=10, pady=10, sticky="w")
+    player2_name_label.grid(row=3, column=0, padx=10, pady=10, sticky="e")
+    player2_name_entry.grid(row=3, column=1, padx=10, pady=10, sticky="w")
+    submit_button.grid(row=4, column=0, columnspan=2, pady=20)
+
   def init_game_screen(self, player1_name: tk.StringVar, player2_name: tk.StringVar):
     """ 
     creates a game screen so players can play quarto 
@@ -69,6 +72,10 @@ class Quarto:
     """
     if self.root:
       self.root.destroy()
+
+    # Reset the board and piece states
+    self.board = [[None for _ in range(4)] for _ in range(4)]
+    self.piece_played = {key: False for key in self.piece_played}
 
     # recreate tk interface for the game board
     self.root = tk.Tk()
@@ -92,14 +99,24 @@ class Quarto:
     self.draw_board()
     self.bind_highlight()
     self.bind_clicks()
-    self.board = [[None for _ in range(4)] for _ in range(4)] # creates a list of lists with 4 rows and 4 columns to fill in with pieces
     
-    self.player_display = tk.Label(self.root, text=f"{self.turn}'s Turn", font=('Courier', 15, 'bold'), fg="seagreen")
+    # status bar frame
+    status_frame = tk.Frame(self.root, bd=1, relief=tk.SUNKEN, bg="lightgrey")
+    status_frame.pack(side=tk.BOTTOM, fill=tk.X)
+
+    # move player display into the status bar
+    self.player_display = tk.Label(status_frame, text=f"{self.turn}'s Turn", font=('Courier', 15, 'bold'), fg="seagreen", bg="lightgrey")
+    self.player_display.pack()
+    
     close_button = tk.Button(self.root, text="Close", command=self.init_menu_screen)
-    self.player_display.pack(side=tk.TOP)    
     close_button.pack(side=tk.BOTTOM)
+    
     self.claim_button = tk.Button(self.root, text="Claim Victory", command=self.claim_victory)
     self.claim_button.pack(side=tk.RIGHT)
+    
+    restart_button = tk.Button(self.root, text="Restart Game", command=lambda: self.init_game_screen(player1_name, player2_name))
+    restart_button.pack(side=tk.BOTTOM, pady=10)
+
 
   def change_turn(self):
     """ changes color, turn, and player display on each turn """
@@ -144,10 +161,13 @@ class Quarto:
     
     # have to draw 16 rectangles instead of lines in order to highlight them upon mouseover
     for i in range(4):
-      for j in range(4):
-        # instead of 200, use 202 to create 2px extra space between squares so highlight doesn't overlap
-        id = self.canvas.create_rectangle(400 + 202 * i, 50 + 202 * j, 600 + 202 * i, 250 + 202 * j, fill="white", outline="black", width=1)
-        self.canvas.addtag_withtag(f"board-{i}-{j}", id)
+        for j in range(4):
+          color = "lightgrey" if (i + j) % 2 == 0 else "white"
+          id = self.canvas.create_rectangle(400 + 202 * i, 50 + 202 * j, 
+                                          600 + 202 * i, 250 + 202 * j, 
+                                          fill=color, outline="black", width=1)
+          self.canvas.addtag_withtag(f"board-{i}-{j}", id)
+
     
   def bind_highlight(self):
     ''' binds the highlight and unhighlight functions to all tags '''
