@@ -1,5 +1,5 @@
 import tkinter as tk
-import tkinter.ttk
+from tkinter import ttk
 from tkinter import messagebox
 
 class Quarto:
@@ -74,7 +74,7 @@ class Quarto:
     # recreate tk interface for the game board
     self.root = tk.Tk()
     self.root.title('Quarto Game')
-    self.root.geometry('2400x1600')
+    self.root.geometry('2000x1200')
     self.canvas = tk.Canvas(self.root)
     self.canvas.pack(fill=tk.BOTH, expand=1)
     self.canvas.configure(bg="white")
@@ -99,8 +99,33 @@ class Quarto:
     close_button = tk.Button(self.root, text="Close", command=self.init_menu_screen)
     self.player_display.pack(side=tk.TOP)    
     close_button.pack(side=tk.BOTTOM)
-    self.claim_button = tk.Button(self.root, text="Claim Victory", command=self.claim_victory)
-    self.claim_button.pack(side=tk.RIGHT)
+    
+    claim_button = tk.Button(self.root, text="Claim Victory", command=lambda: self.claim_victory(claim_type_entry, claim_number_entry))
+   
+    claim_type_label = tk.Label(self.root, text="Claim Type: ")
+    claim_type_entry = ttk.Combobox(self.root, values=["row", "column", "diagonal"])
+    claim_type_entry.current(0)
+    
+    claim_number_label = tk.Label(self.root, text="Claim Number: ")
+    claim_number_entry = ttk.Combobox(self.root, values=[1, 2, 3, 4])
+    claim_number_entry.current(0)
+    
+    claim_type_entry.bind("<<ComboboxSelected>>", lambda event: self._update_combobox_number(claim_type_entry, claim_number_entry))
+
+    claim_button.pack(side=tk.RIGHT, padx=5)
+    claim_number_entry.pack(side=tk.RIGHT, padx=5)
+    claim_number_label.pack(side=tk.RIGHT, padx=5)
+    claim_type_entry.pack(side=tk.RIGHT, padx=5)
+    claim_type_label.pack(side=tk.RIGHT, padx=5)
+
+  def _update_combobox_number(self, claim_type_entry, claim_number_entry):
+    """ updates the claim number combobox based on the claim type combobox """
+    if claim_type_entry.get() == "row" or claim_type_entry.get() == "column":
+      claim_number_entry["values"] = [1, 2, 3, 4]
+      claim_number_entry.current(0)
+    elif claim_type_entry.get() == "diagonal":
+      claim_number_entry["values"] = [1, 2] # main / anti
+      claim_number_entry.current(0)
 
   def change_turn(self):
     """ changes color, turn, and player display on each turn """
@@ -374,9 +399,11 @@ class Quarto:
 
     return False
   
-  def claim_victory(self):
+  def claim_victory(self, claim_type_entry: tk.StringVar, claim_number_entry: tk.IntVar):
     ''' Claims victory and highlights the winning pieces '''
-    winner, won_or_lose = self._check_win_any()
+
+    # winner, won_or_lose = self._check_win_any()
+    winner, won_or_lose = self._check_win_wrapper(row=claim_number_entry.get()-1, col=claim_number_entry.get()-1, diagonal=claim_type_entry.get())
 
     if won_or_lose == True:
         print(f"Player {winner} wins!")
