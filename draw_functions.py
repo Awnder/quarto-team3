@@ -45,55 +45,13 @@ class Quarto:
         player1_name = tk.StringVar()
         player2_name = tk.StringVar()
 
-        title = tk.Label(
-            self.root,
-            text="Welcome to Quarto",
-            font=("Courier", 25, "bold"),
-            bg="black",
-        )
-        instruction = tk.Label(
-            self.root,
-            text="Enter Player Names to Begin!",
-            font=("Courier", 15, "normal"),
-            bg="black",
-        )
-
-        player1_name_label = tk.Label(
-            self.root,
-            text="Player 1 Name",
-            font=("Courier", 15, "bold"),
-            fg="seagreen",
-            bg="black",
-        )
-        player2_name_label = tk.Label(
-            self.root,
-            text="Player 2 Name",
-            font=("Courier", 15, "bold"),
-            fg="purple4",
-            bg="black",
-        )
-
-        player1_name_entry = tk.Entry(
-            self.root,
-            textvariable=player1_name,
-            font=("Courier", 12, "normal"),
-            fg="seagreen",
-            bg="grey",
-        )
-        player2_name_entry = tk.Entry(
-            self.root,
-            textvariable=player2_name,
-            font=("Courier", 12, "normal"),
-            fg="purple4",
-            bg="grey",
-        )
-
-        submit_button = tk.Button(
-            self.root,
-            text="Start Game",
-            command=lambda: self.init_game_screen(player1_name, player2_name),
-            bg="grey",
-        )
+        title = tk.Label(self.root, text="Welcome to Quarto", font=("Courier", 25, "bold"), bg="black")
+        instruction = tk.Label(self.root, text="Enter Player Names to Begin!", font=("Courier", 15, "normal"), bg="black")
+        player1_name_label = tk.Label(self.root, text="Player 1 Name", font=("Courier", 15, "bold"), fg="seagreen", bg="black")
+        player2_name_label = tk.Label(self.root, text="Player 2 Name", font=("Courier", 15, "bold"), fg="purple4", bg="black")
+        player1_name_entry = tk.Entry(self.root, textvariable=player1_name, font=("Courier", 12, "normal"), fg="seagreen", bg="grey")
+        player2_name_entry = tk.Entry(self.root, textvariable=player2_name, font=("Courier", 12, "normal"), fg="purple4", bg="grey")
+        submit_button = tk.Button(self.root, text="Start Game", command=lambda: self.init_game_screen(player1_name, player2_name), bg="grey")
 
         title.pack(pady=20)
         instruction.pack()
@@ -135,22 +93,13 @@ class Quarto:
         self._bind_clicks()
         self.board = [[None for _ in range(4)] for _ in range(4)]  # creates a list of lists with 4 rows and 4 columns to fill in with pieces
 
-        self.player_display = tk.Label(
-            self.root,
-            text=f"{self.turn}'s Turn",
-            font=("Courier", 15, "bold"),
-            fg="seagreen",
-        )
+        self.player_display = tk.Label(self.root, text=f"{self.turn}'s Turn", font=("Courier", 15, "bold"), fg="seagreen")
         close_button = tk.Button(self.root, text="Close", command=self.init_menu_screen)
         self.player_display.pack(side=tk.TOP)
         close_button.pack(side=tk.BOTTOM)
 
         # victory handling
-        claim_button = tk.Button(
-            self.root,
-            text="Claim Victory",
-            command=lambda: self.claim_victory(claim_direction_entry, claim_location_entry, claim_characteristic_entry),
-        )
+        claim_button = tk.Button(self.root, text="Claim Victory", command=lambda: self.claim_victory(claim_direction_entry, claim_location_entry, claim_characteristic_entry))
 
         claim_direction_label = tk.Label(self.root, text="Claim Direction: ")
         claim_direction_entry = ttk.Combobox(self.root, values=["row", "column", "diagonal"])
@@ -164,10 +113,7 @@ class Quarto:
         claim_characteristic_entry = ttk.Combobox(self.root, values=["size", "color", "fill", "shape"])
         claim_characteristic_entry.current(0)
 
-        claim_direction_entry.bind(
-            "<<ComboboxSelected>>",
-            lambda event: self._update_combobox_location(claim_direction_entry, claim_location_entry),
-        )
+        claim_direction_entry.bind("<<ComboboxSelected>>", lambda event: self._update_combobox_location(claim_direction_entry, claim_location_entry))
 
         claim_button.pack(side=tk.RIGHT, padx=5)
         claim_location_entry.pack(side=tk.RIGHT, padx=5)
@@ -222,15 +168,7 @@ class Quarto:
         for i in range(4):
             for j in range(4):
                 # instead of 200, use 202 to create 2px extra space between squares so highlight doesn't overlap
-                id = self.canvas.create_rectangle(
-                    400 + 202 * i,
-                    50 + 202 * j,
-                    600 + 202 * i,
-                    250 + 202 * j,
-                    fill="white",
-                    outline="black",
-                    width=1,
-                )
+                id = self.canvas.create_rectangle(400 + 202 * i, 50 + 202 * j, 600 + 202 * i, 250 + 202 * j, fill="white", outline="black", width=1)
                 self.canvas.addtag_withtag(f"board-{i}-{j}", id)
 
     def select_piece(self, event, tag):
@@ -445,12 +383,7 @@ class Quarto:
 
         return False
 
-    def claim_victory(
-        self,
-        claim_direction_entry: tk.StringVar,
-        claim_location_entry: tk.StringVar,
-        claim_characteristic_entry: tk.StringVar,
-    ):
+    def claim_victory(self, claim_direction_entry: tk.StringVar, claim_location_entry: tk.StringVar, claim_characteristic_entry: tk.StringVar):
         """
         Claims victory and highlights the winning pieces.
 
@@ -548,247 +481,84 @@ class Quarto:
     ### DRAW SHAPE AND ASSIGN TAGS FUNCTIONS ###
 
     def _draw_large_purple_solid_square(self, startx: int, starty: int) -> None:
-        id = self.canvas.create_rectangle(
-            startx,
-            starty,
-            startx + self.large_large,
-            starty + self.large_large,
-            fill="purple4",
-        )
+        id = self.canvas.create_rectangle(startx, starty, startx + self.large_large, starty + self.large_large, fill="purple4")
         self.canvas.addtag_withtag("lpss", id)
 
     def _draw_large_purple_hollow_square(self, startx: int, starty: int) -> None:
-        id1 = self.canvas.create_rectangle(
-            startx,
-            starty,
-            startx + self.large_large,
-            starty + self.large_large,
-            fill="purple4",
-        )
-        id2 = self.canvas.create_rectangle(
-            startx + self.large_small,
-            starty + self.large_small,
-            startx + self.large_large - self.large_small,
-            starty + self.large_large - self.large_small,
-            outline="purple4",
-            fill="mediumpurple1",
-        )
+        id1 = self.canvas.create_rectangle(startx, starty, startx + self.large_large, starty + self.large_large, fill="purple4")
+        id2 = self.canvas.create_rectangle(startx + self.large_small, starty + self.large_small, startx + self.large_large - self.large_small, starty + self.large_large - self.large_small, outline="purple4", fill="mediumpurple1")
         self.canvas.addtag_withtag("lphs", id1)
         self.canvas.addtag_withtag("lphs", id2)
 
     def _draw_large_purple_solid_circle(self, startx: int, starty: int) -> None:
-        id = self.canvas.create_oval(
-            startx,
-            starty,
-            startx + self.large_large,
-            starty + self.large_large,
-            fill="purple4",
-        )
+        id = self.canvas.create_oval(startx, starty, startx + self.large_large, starty + self.large_large, fill="purple4")
         self.canvas.addtag_withtag("lpsc", id)
 
     def _draw_large_purple_hollow_circle(self, startx: int, starty: int) -> None:
-        id1 = self.canvas.create_oval(
-            startx,
-            starty,
-            startx + self.large_large,
-            starty + self.large_large,
-            fill="purple4",
-            outline="purple4",
-            width=2,
-        )
-        id2 = self.canvas.create_oval(
-            startx + self.large_small,
-            starty + self.large_small,
-            startx + self.large_large - self.large_small,
-            starty + self.large_large - self.large_small,
-            fill="mediumpurple1",
-            outline="purple4",
-            width=2,
-        )
+        id1 = self.canvas.create_oval(startx, starty, startx + self.large_large, starty + self.large_large, fill="purple4", outline="purple4", width=2)
+        id2 = self.canvas.create_oval(startx + self.large_small, starty + self.large_small, startx + self.large_large - self.large_small, starty + self.large_large - self.large_small, fill="mediumpurple1", outline="purple4", width=2)
         self.canvas.addtag_withtag("lphc", id1)
         self.canvas.addtag_withtag("lphc", id2)
 
     def _draw_small_purple_solid_square(self, startx: int, starty: int) -> None:
-        id = self.canvas.create_rectangle(
-            startx,
-            starty,
-            startx + self.small_large,
-            starty + self.small_large,
-            fill="purple4",
-        )
+        id = self.canvas.create_rectangle(startx, starty, startx + self.small_large, starty + self.small_large, fill="purple4")
         self.canvas.addtag_withtag("spss", id)
 
     def _draw_small_purple_hollow_square(self, startx: int, starty: int) -> None:
-        id1 = self.canvas.create_rectangle(
-            startx,
-            starty,
-            startx + self.small_large,
-            starty + self.small_large,
-            fill="purple4",
-        )
-        id2 = self.canvas.create_rectangle(
-            startx + self.small_small,
-            starty + self.small_small,
-            startx + self.small_large - self.small_small,
-            starty + self.small_large - self.small_small,
-            outline="purple4",
-            fill="mediumpurple1",
-        )
+        id1 = self.canvas.create_rectangle(startx, starty, startx + self.small_large, starty + self.small_large, fill="purple4")
+        id2 = self.canvas.create_rectangle(startx + self.small_small, starty + self.small_small, startx + self.small_large - self.small_small, starty + self.small_large - self.small_small, outline="purple4", fill="mediumpurple1")
         self.canvas.addtag_withtag("sphs", id1)
         self.canvas.addtag_withtag("sphs", id2)
 
     def _draw_small_purple_solid_circle(self, startx: int, starty: int) -> None:
-        id = self.canvas.create_oval(
-            startx,
-            starty,
-            startx + self.small_large,
-            starty + self.small_large,
-            fill="purple4",
-        )
+        id = self.canvas.create_oval(startx, starty, startx + self.small_large, starty + self.small_large, fill="purple4")
         self.canvas.addtag_withtag("spsc", id)
 
     def _draw_small_purple_hollow_circle(self, startx: int, starty: int) -> None:
-        id1 = self.canvas.create_oval(
-            startx,
-            starty,
-            startx + self.small_large,
-            starty + self.small_large,
-            fill="purple4",
-            outline="purple4",
-            width=2,
-        )
-        id2 = self.canvas.create_oval(
-            startx + self.small_small,
-            starty + self.small_small,
-            startx + self.small_large - self.small_small,
-            starty + self.small_large - self.small_small,
-            fill="mediumpurple1",
-            outline="purple4",
-            width=2,
-        )
+        id1 = self.canvas.create_oval(startx, starty, startx + self.small_large, starty + self.small_large, fill="purple4", outline="purple4", width=2)
+        id2 = self.canvas.create_oval(startx + self.small_small, starty + self.small_small, startx + self.small_large - self.small_small, starty + self.small_large - self.small_small, fill="mediumpurple1", outline="purple4", width=2)
         self.canvas.addtag_withtag("sphc", id1)
         self.canvas.addtag_withtag("sphc", id2)
 
     def _draw_large_green_solid_square(self, startx: int, starty: int) -> None:
-        id = self.canvas.create_rectangle(
-            startx,
-            starty,
-            startx + self.large_large,
-            starty + self.large_large,
-            fill="seagreen",
-        )
+        id = self.canvas.create_rectangle(startx, starty, startx + self.large_large, starty + self.large_large, fill="seagreen")
         self.canvas.addtag_withtag("lgss", id)
 
     def _draw_large_green_hollow_square(self, startx: int, starty: int) -> None:
-        id1 = self.canvas.create_rectangle(
-            startx,
-            starty,
-            startx + self.large_large,
-            starty + self.large_large,
-            fill="seagreen",
-        )
-        id2 = self.canvas.create_rectangle(
-            startx + self.large_small,
-            starty + self.large_small,
-            startx + self.large_large - self.large_small,
-            starty + self.large_large - self.large_small,
-            outline="seagreen",
-            fill="mediumseagreen",
-        )
+        id1 = self.canvas.create_rectangle(startx, starty, startx + self.large_large, starty + self.large_large, fill="seagreen")
+        id2 = self.canvas.create_rectangle(startx + self.large_small, starty + self.large_small, startx + self.large_large - self.large_small, starty + self.large_large - self.large_small, outline="seagreen", fill="mediumseagreen")
         self.canvas.addtag_withtag("lghs", id1)
         self.canvas.addtag_withtag("lghs", id2)
 
     def _draw_large_green_solid_circle(self, startx: int, starty: int) -> None:
-        id = self.canvas.create_oval(
-            startx,
-            starty,
-            startx + self.large_large,
-            starty + self.large_large,
-            fill="seagreen",
-        )
+        id = self.canvas.create_oval(startx, starty, startx + self.large_large, starty + self.large_large, fill="seagreen")
         self.canvas.addtag_withtag("lgsc", id)
 
     def _draw_large_green_hollow_circle(self, startx: int, starty: int) -> None:
-        id1 = self.canvas.create_oval(
-            startx,
-            starty,
-            startx + self.large_large,
-            starty + self.large_large,
-            fill="seagreen",
-            outline="seagreen",
-            width=2,
-        )
-        id2 = self.canvas.create_oval(
-            startx + self.large_small,
-            starty + self.large_small,
-            startx + self.large_large - self.large_small,
-            starty + self.large_large - self.large_small,
-            fill="mediumseagreen",
-            outline="seagreen",
-            width=2,
-        )
+        id1 = self.canvas.create_oval(startx, starty, startx + self.large_large, starty + self.large_large, fill="seagreen", outline="seagreen", width=2)
+        id2 = self.canvas.create_oval(startx + self.large_small, starty + self.large_small, startx + self.large_large - self.large_small, starty + self.large_large - self.large_small, fill="mediumseagreen", outline="seagreen", width=2)
         self.canvas.addtag_withtag("lghc", id1)
         self.canvas.addtag_withtag("lghc", id2)
 
     def _draw_small_green_solid_square(self, startx: int, starty: int) -> None:
-        id = self.canvas.create_rectangle(
-            startx,
-            starty,
-            startx + self.small_large,
-            starty + self.small_large,
-            fill="seagreen",
-        )
+        id = self.canvas.create_rectangle(startx, starty, startx + self.small_large, starty + self.small_large, fill="seagreen")
         self.canvas.addtag_withtag("sgss", id)
 
     def _draw_small_green_hollow_square(self, startx: int, starty: int) -> None:
-        id1 = self.canvas.create_rectangle(
-            startx,
-            starty,
-            startx + self.small_large,
-            starty + self.small_large,
-            fill="seagreen",
-        )
-        id2 = self.canvas.create_rectangle(
-            startx + self.small_small,
-            starty + self.small_small,
-            startx + self.small_large - self.small_small,
-            starty + self.small_large - self.small_small,
-            outline="seagreen",
-            fill="mediumseagreen",
-        )
+        id1 = self.canvas.create_rectangle(startx, starty, startx + self.small_large, starty + self.small_large, fill="seagreen")
+        id2 = self.canvas.create_rectangle(startx + self.small_small, starty + self.small_small, startx + self.small_large - self.small_small, starty + self.small_large - self.small_small, outline="seagreen", fill="mediumseagreen")
         self.canvas.addtag_withtag("sghs", id1)
         self.canvas.addtag_withtag("sghs", id2)
 
     def _draw_small_green_solid_circle(self, startx: int, starty: int) -> None:
-        id = self.canvas.create_oval(
-            startx,
-            starty,
-            startx + self.small_large,
-            starty + self.small_large,
-            fill="seagreen",
-        )
+        id = self.canvas.create_oval(startx, starty, startx + self.small_large, starty + self.small_large, fill="seagreen")
         self.canvas.addtag_withtag("sgsc", id)
 
     def _draw_small_green_hollow_circle(self, startx: int, starty: int) -> None:
-        id1 = self.canvas.create_oval(
-            startx,
-            starty,
-            startx + self.small_large,
-            starty + self.small_large,
-            fill="seagreen",
-            outline="seagreen",
-            width=2,
-        )
-        id2 = self.canvas.create_oval(
-            startx + self.small_small,
-            starty + self.small_small,
-            startx + self.small_large - self.small_small,
-            starty + self.small_large - self.small_small,
-            fill="mediumseagreen",
-            outline="seagreen",
-            width=2,
-        )
+        id1 = self.canvas.create_oval(startx, starty, startx + self.small_large, starty + self.small_large, fill="seagreen", outline="seagreen", width=2)
+        id2 = self.canvas.create_oval(startx + self.small_small, starty + self.small_small, startx + self.small_large - self.small_small, starty + self.small_large - self.small_small, fill="mediumseagreen", outline="seagreen", width=2)
         self.canvas.addtag_withtag("sghc", id1)
+        self.canvas.addtag_withtag("sghc", id2)
         self.canvas.addtag_withtag("sghc", id2)
 
     def draw_piece(self, piece: str, startx: int, starty: int) -> None:
