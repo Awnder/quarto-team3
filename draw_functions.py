@@ -102,15 +102,15 @@ class Quarto:
         claim_button = tk.Button(self.root, text="Claim Victory", command=lambda: self.claim_victory(claim_direction_entry, claim_location_entry, claim_characteristic_entry))
 
         claim_direction_label = tk.Label(self.root, text="Claim Direction: ")
-        claim_direction_entry = ttk.Combobox(self.root, values=["row", "column", "diagonal"])
+        claim_direction_entry = ttk.Combobox(self.root, values=["row", "column", "diagonal"], state="readonly")
         claim_direction_entry.current(0)
 
         claim_location_label = tk.Label(self.root, text="Claim Number: ")
-        claim_location_entry = ttk.Combobox(self.root, values=[1, 2, 3, 4])
+        claim_location_entry = ttk.Combobox(self.root, values=[1, 2, 3, 4], state="readonly")
         claim_location_entry.current(0)
 
         claim_characteristic_label = tk.Label(self.root, text="Claim Characteristic: ")
-        claim_characteristic_entry = ttk.Combobox(self.root, values=["size", "color", "fill", "shape"])
+        claim_characteristic_entry = ttk.Combobox(self.root, values=["size", "color", "fill", "shape"], state="readonly")
         claim_characteristic_entry.current(0)
 
         claim_direction_entry.bind("<<ComboboxSelected>>", lambda event: self._update_combobox_location(claim_direction_entry, claim_location_entry))
