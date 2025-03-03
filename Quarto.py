@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
+from QuartoBot import QuartoTestBot
 
 
 class Quarto:
@@ -222,8 +223,6 @@ class Quarto:
                 print("Error: Could not get selected piece coordinates!")
         else:
             print(f"Slot ({i}, {j}) is already occupied!")
-
-        self.change_turn()
 
     ### WINNING CONDITIONS FUNCTIONS ###
 
