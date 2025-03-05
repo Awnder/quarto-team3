@@ -41,26 +41,45 @@ class Quarto:
         self.root = tk.Tk()
         self.root.title("Quarto Menu")
         self.root.geometry("600x400")
-        self.root.configure(bg="black")
+        self.root.configure(bg="white")
 
+        title = tk.Label(self.root, text="Welcome to Quarto", font=("Courier", 25, "bold"), bg="white")
+        instruction = tk.Label(self.root, text="Enter Player Names to Begin!", font=("Courier", 15, "normal"))
+        
+        # player and bot widgets for labels, entries, and dropdowns
+        # storing names in StringVar so they can be used later after the entries are destroyed when starting a new screen
         player1_name = tk.StringVar()
         player2_name = tk.StringVar()
 
-        title = tk.Label(self.root, text="Welcome to Quarto", font=("Courier", 25, "bold"), bg="black")
-        instruction = tk.Label(self.root, text="Enter Player Names to Begin!", font=("Courier", 15, "normal"), bg="black")
-        player1_name_label = tk.Label(self.root, text="Player 1 Name", font=("Courier", 15, "bold"), fg="seagreen", bg="black")
-        player2_name_label = tk.Label(self.root, text="Player 2 Name", font=("Courier", 15, "bold"), fg="purple4", bg="black")
-        player1_name_entry = tk.Entry(self.root, textvariable=player1_name, font=("Courier", 12, "normal"), fg="seagreen", bg="grey")
-        player2_name_entry = tk.Entry(self.root, textvariable=player2_name, font=("Courier", 12, "normal"), fg="purple4", bg="grey")
-        submit_button = tk.Button(self.root, text="Start Game", command=lambda: self.init_game_screen(player1_name, player2_name), bg="grey")
+        player1_name_label = tk.Label(self.root, text="Player 1 Name", font=("Courier", 15, "bold"), fg="seagreen")
+        player1_name_entry = tk.Entry(self.root, textvariable=player1_name, font=("Courier", 12, "normal"), fg="seagreen", bg="lightgray")
+        
+        player2_name_label = tk.Label(self.root, text="Player 2 Name", font=("Courier", 15, "bold"), fg="purple4")
+        player2_name_entry = tk.Entry(self.root, textvariable=player2_name, font=("Courier", 12, "normal"), fg="purple4", bg="lightgray")
+        player2_bot_dropdown = ttk.Combobox(self.root, values=["QuartoBot"], state="readonly")
+        player2_bot_dropdown.current(0)
+       
+        # selectable opponents for player 2, changes the player 2 name label and entry based on the dropdown
+        opponent_label = tk.Label(self.root, text="Select Opponent", font=("Courier", 15, "bold"))
+        opponent_dropdown = ttk.Combobox(self.root, values=["Human", "Bot"], state="readonly")
+        opponent_dropdown.current(0)
+        opponent_dropdown.bind("<<ComboboxSelected>>", lambda event: self._update_opponent(opponent_dropdown, player2_bot_dropdown, player2_name_entry, player2_name_label))
 
-        title.pack(pady=20)
-        instruction.pack()
-        player1_name_label.pack(pady=25)
-        player1_name_entry.pack()
-        player2_name_label.pack(pady=25)
-        player2_name_entry.pack()
-        submit_button.pack(pady=10)
+        submit_button = tk.Button(self.root, text="Start Game", command=lambda: self.init_game_screen(player1_name, player2_name), bg="lightgrey")
+
+        # centers widgets horizontally for each column
+        self.root.grid_columnconfigure(0, weight=1)
+        self.root.grid_columnconfigure(1, weight=1)
+
+        title.grid(row=0, column=0, columnspan=2, pady=20)
+        instruction.grid(row=1, column=0, columnspan=2, pady=10)
+        player1_name_label.grid(row=2, column=0, pady=10)
+        player2_name_label.grid(row=2, column=1, pady=10)
+        player1_name_entry.grid(row=3, column=0, pady=10)
+        player2_name_entry.grid(row=3, column=1, pady=10)
+        opponent_label.grid(row=4, column=0, columnspan=2, pady=10)
+        opponent_dropdown.grid(row=5, column=0, columnspan=2, pady=10)
+        submit_button.grid(row=6, column=0, columnspan=2, pady=10)
 
     def init_game_screen(self, player1_name: tk.StringVar, player2_name: tk.StringVar):
         """
@@ -73,7 +92,7 @@ class Quarto:
         # recreate tk interface for the game board
         self.root = tk.Tk()
         self.root.title("Quarto Game")
-        self.root.geometry("2000x1200")
+        self.root.geometry("1400x1000")
         self.canvas = tk.Canvas(self.root)
         self.canvas.pack(fill=tk.BOTH, expand=1)
         self.canvas.configure(bg="white")
@@ -100,28 +119,28 @@ class Quarto:
         close_button.pack(side=tk.BOTTOM)
 
         # victory handling
-        claim_button = tk.Button(self.root, text="Claim Victory", command=lambda: self.claim_victory(claim_direction_entry, claim_location_entry, claim_characteristic_entry))
+        claim_button = tk.Button(self.root, text="Claim Victory", command=lambda: self.claim_victory(claim_direction_dropdown, claim_location_dropdown, claim_characteristic_dropdown))
 
         claim_direction_label = tk.Label(self.root, text="Claim Direction: ")
-        claim_direction_entry = ttk.Combobox(self.root, values=["row", "column", "diagonal"], state="readonly")
-        claim_direction_entry.current(0)
+        claim_direction_dropdown = ttk.Combobox(self.root, values=["row", "column", "diagonal"], state="readonly")
+        claim_direction_dropdown.current(0)
 
         claim_location_label = tk.Label(self.root, text="Claim Number: ")
-        claim_location_entry = ttk.Combobox(self.root, values=[1, 2, 3, 4], state="readonly")
-        claim_location_entry.current(0)
+        claim_location_dropdown = ttk.Combobox(self.root, values=[1, 2, 3, 4], state="readonly")
+        claim_location_dropdown.current(0)
 
         claim_characteristic_label = tk.Label(self.root, text="Claim Characteristic: ")
-        claim_characteristic_entry = ttk.Combobox(self.root, values=["size", "color", "fill", "shape"], state="readonly")
-        claim_characteristic_entry.current(0)
+        claim_characteristic_dropdown = ttk.Combobox(self.root, values=["size", "color", "fill", "shape"], state="readonly")
+        claim_characteristic_dropdown.current(0)
 
-        claim_direction_entry.bind("<<ComboboxSelected>>", lambda event: self._update_combobox_location(claim_direction_entry, claim_location_entry))
+        claim_direction_dropdown.bind("<<ComboboxSelected>>", lambda event: self._update_combobox_location(claim_direction_dropdown, claim_location_dropdown))
 
         claim_button.pack(side=tk.RIGHT, padx=5)
-        claim_location_entry.pack(side=tk.RIGHT, padx=5)
+        claim_location_dropdown.pack(side=tk.RIGHT, padx=5)
         claim_location_label.pack(side=tk.RIGHT, padx=5)
-        claim_direction_entry.pack(side=tk.RIGHT, padx=5)
+        claim_direction_dropdown.pack(side=tk.RIGHT, padx=5)
         claim_direction_label.pack(side=tk.RIGHT, padx=5)
-        claim_characteristic_entry.pack(side=tk.RIGHT, padx=5)
+        claim_characteristic_dropdown.pack(side=tk.RIGHT, padx=5)
         claim_characteristic_label.pack(side=tk.RIGHT, padx=5)
 
     def change_turn(self):
@@ -415,14 +434,25 @@ class Quarto:
 
     ### TKINTER DYNAMIC UPDATE FUNCTIONS ###
 
-    def _update_combobox_location(self, claim_direction_entry, claim_location_entry):
+    def _update_opponent(self, opponent_dropdown: ttk.Combobox, player2_bot_dropdown: ttk.Combobox, player2_name_entry: tk.Entry, player2_name_label: tk.Label):
+        """updates the player 2 name label and entry based on the opponent dropdown"""
+        if opponent_dropdown.get() == "Bot":
+            player2_name_label.config(text="Bot Name")
+            player2_name_entry.grid_remove()
+            player2_bot_dropdown.grid(row=3, column=1, pady=10)
+        else:
+            player2_name_label.config(text="Player 2 Name")
+            player2_bot_dropdown.grid_remove()
+            player2_name_entry.grid(row=3, column=1, pady=10)
+
+    def _update_combobox_location(self, claim_direction_dropdown, claim_location_dropdown):
         """updates the claim number combobox based on the claim type combobox"""
-        if claim_direction_entry.get() == "row" or claim_direction_entry.get() == "column":
-            claim_location_entry["values"] = [1, 2, 3, 4]
-            claim_location_entry.current(0)
-        elif claim_direction_entry.get() == "diagonal":
-            claim_location_entry["values"] = ["main", "anti"]
-            claim_location_entry.current(0)
+        if claim_direction_dropdown.get() == "row" or claim_direction_dropdown.get() == "column":
+            claim_location_dropdown["values"] = [1, 2, 3, 4]
+            claim_location_dropdown.current(0)
+        elif claim_direction_dropdown.get() == "diagonal":
+            claim_location_dropdown["values"] = ["main", "anti"]
+            claim_location_dropdown.current(0)
 
     def _highlight(self, event, id):
         """change border color to yellow and increase width of border upon mouseover"""
