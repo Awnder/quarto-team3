@@ -14,7 +14,7 @@ class Quarto:
         # players
         self.player1_name = None
         self.player2_name = None
-        self.turn = True # state variable to keep track of turns, True for player 1, False for player 2
+        self.turn = None # string state variable to track whose turn it is
         self.player_display = None # label that displays the current player
         self.bot = None # bot object if player 2 is a bot
 
@@ -57,14 +57,7 @@ class Quarto:
         
         player2_name_label = tk.Label(self.root, text="Player 2 Name", font=("Courier", 15, "bold"), fg="purple4")
         player2_name_entry = tk.Entry(self.root, textvariable=player2_name, font=("Courier", 12, "normal"), fg="purple4", bg="lightgray")
-        player2_bot_dropdown = ttk.Combobox(self.root, textvariable=player2_name, values=["QuartoTestBot"], state="readonly")
-        player2_bot_dropdown.current(0)
-       
-        # selectable opponents for player 2, changes the player 2 name label and entry based on the dropdown
-        opponent_label = tk.Label(self.root, text="Select Opponent", font=("Courier", 15, "bold"))
-        opponent_dropdown = ttk.Combobox(self.root, values=["Human", "Bot"], state="readonly")
-        opponent_dropdown.current(0)
-        opponent_dropdown.bind("<<ComboboxSelected>>", lambda event: self._update_opponent(opponent_dropdown, player2_bot_dropdown, player2_name_entry, player2_name_label))
+        opponent_label = tk.Label(self.root, text="Use: QuartoTestBot for a Bot Player", font=("Courier", 10, "normal"), fg="purple4")
 
         submit_button = tk.Button(self.root, text="Start Game", command=lambda: self.init_game_screen(player1_name, player2_name), bg="lightgrey")
 
@@ -79,7 +72,6 @@ class Quarto:
         player1_name_entry.grid(row=3, column=0, pady=10)
         player2_name_entry.grid(row=3, column=1, pady=10)
         opponent_label.grid(row=4, column=0, columnspan=2, pady=10)
-        opponent_dropdown.grid(row=5, column=0, columnspan=2, pady=10)
         submit_button.grid(row=6, column=0, columnspan=2, pady=10)
 
     def init_game_screen(self, player1_name: tk.StringVar, player2_name: tk.StringVar):
@@ -113,14 +105,14 @@ class Quarto:
         else:
             self.bot = None
 
-        self.turn = True
+        self.turn = self.player1_name
 
         self.draw_board()
         self._bind_highlight()
         self._bind_clicks()
         self.board = [[None for _ in range(4)] for _ in range(4)]  # creates a list of lists with 4 rows and 4 columns to fill in with pieces
 
-        self.player_display = tk.Label(self.root, text=f"{self.player1_name}'s Turn", font=("Courier", 15, "bold"), fg="seagreen")
+        self.player_display = tk.Label(self.root, text=f"{self.turn}'s Turn", font=("Courier", 15, "bold"), fg="seagreen")
         close_button = tk.Button(self.root, text="Close", command=self.init_menu_screen)
         self.player_display.pack(side=tk.TOP)
         close_button.pack(side=tk.BOTTOM)
@@ -444,9 +436,9 @@ class Quarto:
         
     def _change_turn(self):
         """changes color, turn, and player display on each turn"""
-        self.turn = not self.turn
-
-        if self.turn:
+        self.turn = self.player1_name if self.turn == self.player2_name else self.player2_name  # toggle turn
+      
+        if self.turn == self.player1_name:
             self.player_display.config(text=f"{self.player1_name}'s Turn", fg="purple4")
         else:
             self.player_display.config(text=f"{self.player2_name}'s Turn", fg="seagreen")
