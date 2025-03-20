@@ -1,6 +1,6 @@
 class QuartoBot:
-    def __init__(self, name: str):
-        self.name = name
+    def __init__(self):
+        pass
 
     def select_piece(self, board: list[list[bool]], pieces: dict[str, bool]) -> str:
         """ Implement this method to select a piece to give to the opponent """
@@ -12,13 +12,13 @@ class QuartoBot:
 
 class QuartoTestBot(QuartoBot):
     def __init__(self):
-        super().__init__('TestBot')
+        pass
         
     def select_piece(self, board: list[list[bool]], pieces: dict[str, bool]) -> str:
         """ Selects the first piece that is not placed on the board """
         pieces_remaining = [piece for piece in pieces if not pieces[piece]]
         piece = pieces_remaining[0]
-        print(f'{self.name} selected piece: {piece}')
+        print(f'Bot selected piece: {piece}')
         return piece
 
     def place_piece(self, board: list[list[bool]], pieces: dict[str, bool], piece: str) -> tuple[list[list[bool]], dict[str, bool]]:
@@ -28,7 +28,7 @@ class QuartoTestBot(QuartoBot):
                 if not cell:
                     board[i][j] = True
                     pieces[piece] = True
-                    print(f'{self.name} placed piece: {piece} at ({i}, {j})')
+                    print(f'Bot placed piece: {piece} at ({i}, {j})')
                     return board, pieces
 
         print("Bot unable to place piece")    
