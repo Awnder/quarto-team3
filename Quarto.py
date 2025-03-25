@@ -440,6 +440,8 @@ class Quarto:
                         tag = f"board-{i}-{j}"
                         self.place_piece(None, tag)  # Simulate click on an empty board spot
                         return  # Stop after placing one piece
+            
+            self._check_win_any()  # Check if the bot has won
         
     def _change_turn(self):
         """Changes turn and updates the display correctly"""
