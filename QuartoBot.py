@@ -21,15 +21,16 @@ class QuartoTestBot(QuartoBot):
         print(f'Bot selected piece: {piece}')
         return piece
 
-    def place_piece(self, board: list[list[bool]], pieces: dict[str, bool], piece: str) -> tuple[list[list[bool]], dict[str, bool]]:
-        """ Places the piece at the first empty position """
+    def place_piece(self, board: list[list[str]], pieces: dict[str, bool], piece: str) -> tuple[list[list[str]], dict[str, bool]]:
+        """Places the piece at the first empty position"""
         for i, row in enumerate(board):
             for j, cell in enumerate(row):
-                if not cell:
-                    board[i][j] = True
+                if cell is None:  # Look for an empty slot
+                    board[i][j] = piece  # Store the piece tag, not just True
                     pieces[piece] = True
                     print(f'Bot placed piece: {piece} at ({i}, {j})')
                     return board, pieces
 
         print("Bot unable to place piece")    
         return board, pieces
+
