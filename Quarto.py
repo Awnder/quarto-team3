@@ -429,20 +429,27 @@ class Quarto:
     ### TKINTER DYNAMIC UPDATE FUNCTIONS ###
     def _handle_bot_turn(self):
         """Handles the bot's turn if player 2 is a bot. It selects a piece and places it on the board."""
-        # places bot's piece on the board
-        self.board, self.pieces = self.bot.place_piece(self.board, self.piece_played, self.selected_piece)
-        # selects piece for human player to play next
-        self.selected_piece = self.bot.select_piece(self.board, self.piece_played)
+        if self.bot:
+            # Select a piece for the human player
+            self.selected_piece = self.bot.select_piece(self.board, self.piece_played)
+        
+            # Find a spot for the bot's move
+            for i in range(4):
+                for j in range(4):
+                    if self.board[j][i] is None:  # Check if the slot is empty
+                        tag = f"board-{i}-{j}"
+                        self.place_piece(None, tag)  # Simulate click on an empty board spot
+                        return  # Stop after placing one piece
         
     def _change_turn(self):
-        """changes color, turn, and player display on each turn"""
-        self.turn = self.player1_name if self.turn == self.player2_name else self.player2_name  # toggle turn
-      
+        """Changes turn and updates the display correctly"""
+        self.turn = self.player1_name if self.turn == self.player2_name else self.player2_name  # Toggle turn
+
         if self.turn == self.player1_name:
             self.player_display.config(text=f"{self.player1_name}'s Turn", fg="purple4")
         else:
             self.player_display.config(text=f"{self.player2_name}'s Turn", fg="seagreen")
-            self.player_display.after(100, self._handle_bot_turn)  # delay for bot to take its turn
+            self.root.after(500, self._handle_bot_turn)  # Ensure delay before bot plays
 
     def _update_opponent(self, opponent_dropdown: ttk.Combobox, player2_bot_dropdown: ttk.Combobox, player2_name_entry: tk.Entry, player2_name_label: tk.Label):
         """updates the player 2 name label and entry based on the opponent dropdown"""
