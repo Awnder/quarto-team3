@@ -446,9 +446,9 @@ class Quarto:
         self.turn = self.player1_name if self.turn == self.player2_name else self.player2_name  # Toggle turn
 
         if self.turn == self.player1_name:
-            self.player_display.config(text=f"{self.player1_name}'s Turn", fg="purple4")
+            self.player_display.config(text=f"{self.player1_name}'s Turn", fg="seagreen")
         else:
-            self.player_display.config(text=f"{self.player2_name}'s Turn", fg="seagreen")
+            self.player_display.config(text=f"{self.player2_name}'s Turn", fg="purple4")
             self.root.after(500, self._handle_bot_turn)  # Ensure delay before bot plays
 
     def _update_opponent(self, opponent_dropdown: ttk.Combobox, player2_bot_dropdown: ttk.Combobox, player2_name_entry: tk.Entry, player2_name_label: tk.Label):
