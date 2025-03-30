@@ -13,7 +13,6 @@ class GameBoard:
         self.draw_board()
         self.bind_clicks()
         self.bind_highlight()
-        self.canvas.itemconfig(self.canvas.find_withtag("lpss")[0], outline="yellow", width=3)
 
     def select_piece(self, tag):
         """Selects a piece if clicked."""
@@ -106,7 +105,7 @@ class GameBoard:
         for i in range(4):
             for j in range(4):
                 # instead of 200, use 202 to create 2px extra space between squares so highlight doesn't overlap
-                id = self.canvas.create_rectangle(400 + 202 * i, 50 + 202 * j, 600 + 202 * i, 250 + 202 * j, fill="white", outline="black", width=1)
+                id = self.canvas.create_rectangle(400 + 200 * i, 50 + 200 * j, 600 + 200 * i, 250 + 200 * j, fill="white", outline="black", width=1)
                 self.canvas.addtag_withtag(f"board-{i}-{j}", id)
 
     def bind_clicks(self):
@@ -128,34 +127,19 @@ class GameBoard:
                     lambda event, tag=tags[0]: self.place_piece(tag),
                 )
 
-        print("bind_clicks")
-
     def bind_highlight(self):
-        """Binds mouse hover for highlighting pieces and grid slots."""
+        """Binds mouse events for highlighting grid slots."""
         for id in self.canvas.find_all():
             tags = self.canvas.gettags(id)
-            print(tags)
-            if tags and not tags[0].startswith("category-"):
-                # Bind highlight on mouse enter
+            if tags and tags[0].startswith("board-") and not tags[0].startswith("category-"):
+                # Bind mouse enter and leave events for highlighting
                 self.canvas.tag_bind(
-                    id,
+                    tags,
                     "<Enter>",
-                    lambda event, id=id: self._highlight(id),
+                    lambda event, tag=tags: self.canvas.itemconfig(tag, fill="lightblue"),
                 )
-                # Bind unhighlight on mouse leave
                 self.canvas.tag_bind(
-                    id,
+                    tags[0],
                     "<Leave>",
-                    lambda event, id=id: self._unhighlight(id),
+                    lambda event, tag=tags: self.canvas.itemconfig(tag, fill="white"),
                 )
-        print("bind_highlights")
-
-    def _highlight(self, id):
-        """Highlights a piece when the mouse enters its area."""
-        self.canvas.itemconfig(id, outline="yellow", width=3)
-        print(f"Highlighting {id}")
-
-    def _unhighlight(self, id):
-        """Unhighlights a piece when the mouse leaves its area."""
-        self.canvas.itemconfig(id, outline="black", width=1)
-        print(f"Unhighlighting {id}")
