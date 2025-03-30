@@ -134,6 +134,7 @@ class GameBoard:
         """Binds mouse hover for highlighting pieces and grid slots."""
         for id in self.canvas.find_all():
             tags = self.canvas.gettags(id)
+            print(tags)
             if tags and not tags[0].startswith("category-"):
                 # Bind highlight on mouse enter
                 self.canvas.tag_bind(
@@ -147,8 +148,6 @@ class GameBoard:
                     "<Leave>",
                     lambda event, id=id: self._unhighlight(id),
                 )
-            
-
         print("bind_highlights")
 
     def _highlight(self, id):

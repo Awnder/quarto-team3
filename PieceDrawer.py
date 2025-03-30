@@ -47,80 +47,127 @@ class PieceDrawer:
     def _draw_large_purple_solid_square(self, startx: int, starty: int) -> None:
         id = self.canvas.create_rectangle(startx, starty, startx + self.large_large, starty + self.large_large, fill="purple4")
         self.canvas.addtag_withtag("lpss", id)
+        self.canvas.tag_bind(id, "<Enter>", lambda event, id=id: self._highlight(id))
+        self.canvas.tag_bind(id, "<Leave>", lambda event, id=id: self._unhighlight(id))
 
     def _draw_large_purple_hollow_square(self, startx: int, starty: int) -> None:
         id1 = self.canvas.create_rectangle(startx, starty, startx + self.large_large, starty + self.large_large, fill="purple4")
         id2 = self.canvas.create_rectangle(startx + self.large_small, starty + self.large_small, startx + self.large_large - self.large_small, starty + self.large_large - self.large_small, outline="purple4", fill="mediumpurple1")
         self.canvas.addtag_withtag("lphs", id1)
         self.canvas.addtag_withtag("lphs", id2)
+        self.canvas.tag_bind(id1, "<Enter>", lambda event, id=id1: self._highlight(id1))
+        self.canvas.tag_bind(id1, "<Leave>", lambda event, id=id1: self._unhighlight(id1))
+        self.canvas.tag_bind(id2, "<Enter>", lambda event, id=id1: self._highlight(id1))  # highlight outer square when hovering over inner
+        self.canvas.tag_bind(id2, "<Leave>", lambda event, id=id1: self._unhighlight(id1))  # unhighlight outer square when leaving inner
 
     def _draw_large_purple_solid_circle(self, startx: int, starty: int) -> None:
         id = self.canvas.create_oval(startx, starty, startx + self.large_large, starty + self.large_large, fill="purple4")
         self.canvas.addtag_withtag("lpsc", id)
+        self.canvas.tag_bind(id, "<Enter>", lambda event, id=id: self._highlight(id))
+        self.canvas.tag_bind(id, "<Leave>", lambda event, id=id: self._unhighlight(id))
 
     def _draw_large_purple_hollow_circle(self, startx: int, starty: int) -> None:
         id1 = self.canvas.create_oval(startx, starty, startx + self.large_large, starty + self.large_large, fill="purple4", outline="purple4", width=2)
         id2 = self.canvas.create_oval(startx + self.large_small, starty + self.large_small, startx + self.large_large - self.large_small, starty + self.large_large - self.large_small, fill="mediumpurple1", outline="purple4", width=2)
         self.canvas.addtag_withtag("lphc", id1)
         self.canvas.addtag_withtag("lphc", id2)
+        self.canvas.tag_bind(id1, "<Enter>", lambda event, id=id1: self._highlight(id1))
+        self.canvas.tag_bind(id1, "<Leave>", lambda event, id=id1: self._unhighlight(id1))
+        self.canvas.tag_bind(id2, "<Enter>", lambda event, id=id1: self._highlight(id1))  # highlight outer circle when hovering over inner
+        self.canvas.tag_bind(id2, "<Leave>", lambda event, id=id1: self._unhighlight(id1))  # unhighlight outer circle when leaving inner
 
     def _draw_small_purple_solid_square(self, startx: int, starty: int) -> None:
         id = self.canvas.create_rectangle(startx, starty, startx + self.small_large, starty + self.small_large, fill="purple4")
         self.canvas.addtag_withtag("spss", id)
+        self.canvas.tag_bind(id, "<Enter>", lambda event, id=id: self._highlight(id))
+        self.canvas.tag_bind(id, "<Leave>", lambda event, id=id: self._unhighlight(id))
 
     def _draw_small_purple_hollow_square(self, startx: int, starty: int) -> None:
         id1 = self.canvas.create_rectangle(startx, starty, startx + self.small_large, starty + self.small_large, fill="purple4")
         id2 = self.canvas.create_rectangle(startx + self.small_small, starty + self.small_small, startx + self.small_large - self.small_small, starty + self.small_large - self.small_small, outline="purple4", fill="mediumpurple1")
         self.canvas.addtag_withtag("sphs", id1)
         self.canvas.addtag_withtag("sphs", id2)
+        self.canvas.tag_bind(id1, "<Enter>", lambda event, id=id1: self._highlight(id1))
+        self.canvas.tag_bind(id1, "<Leave>", lambda event, id=id1: self._unhighlight(id1))
+        self.canvas.tag_bind(id2, "<Enter>", lambda event, id=id1: self._highlight(id1))  # highlight outer square when hovering over inner
+        self.canvas.tag_bind(id2, "<Leave>", lambda event, id=id1: self._unhighlight(id1))  # unhighlight outer square when leaving inner
 
     def _draw_small_purple_solid_circle(self, startx: int, starty: int) -> None:
         id = self.canvas.create_oval(startx, starty, startx + self.small_large, starty + self.small_large, fill="purple4")
         self.canvas.addtag_withtag("spsc", id)
+        self.canvas.tag_bind(id, "<Enter>", lambda event, id=id: self._highlight(id))
+        self.canvas.tag_bind(id, "<Leave>", lambda event, id=id: self._unhighlight(id))
 
     def _draw_small_purple_hollow_circle(self, startx: int, starty: int) -> None:
         id1 = self.canvas.create_oval(startx, starty, startx + self.small_large, starty + self.small_large, fill="purple4", outline="purple4", width=2)
         id2 = self.canvas.create_oval(startx + self.small_small, starty + self.small_small, startx + self.small_large - self.small_small, starty + self.small_large - self.small_small, fill="mediumpurple1", outline="purple4", width=2)
         self.canvas.addtag_withtag("sphc", id1)
         self.canvas.addtag_withtag("sphc", id2)
+        self.canvas.tag_bind(id1, "<Enter>", lambda event, id=id1: self._highlight(id1))
+        self.canvas.tag_bind(id1, "<Leave>", lambda event, id=id1: self._unhighlight(id1))
+        self.canvas.tag_bind(id2, "<Enter>", lambda event, id=id1: self._highlight(id1))  # highlight outer circle when hovering over inner
+        self.canvas.tag_bind(id2, "<Leave>", lambda event, id=id1: self._unhighlight(id1))  # unhighlight outer circle when leaving inner
 
     def _draw_large_green_solid_square(self, startx: int, starty: int) -> None:
         id = self.canvas.create_rectangle(startx, starty, startx + self.large_large, starty + self.large_large, fill="seagreen")
         self.canvas.addtag_withtag("lgss", id)
+        self.canvas.tag_bind(id, "<Enter>", lambda event, id=id: self._highlight(id))
+        self.canvas.tag_bind(id, "<Leave>", lambda event, id=id: self._unhighlight(id))
 
     def _draw_large_green_hollow_square(self, startx: int, starty: int) -> None:
         id1 = self.canvas.create_rectangle(startx, starty, startx + self.large_large, starty + self.large_large, fill="seagreen")
         id2 = self.canvas.create_rectangle(startx + self.large_small, starty + self.large_small, startx + self.large_large - self.large_small, starty + self.large_large - self.large_small, outline="seagreen", fill="mediumseagreen")
         self.canvas.addtag_withtag("lghs", id1)
         self.canvas.addtag_withtag("lghs", id2)
+        self.canvas.tag_bind(id1, "<Enter>", lambda event, id=id1: self._highlight(id1))
+        self.canvas.tag_bind(id1, "<Leave>", lambda event, id=id1: self._unhighlight(id1))
+        self.canvas.tag_bind(id2, "<Enter>", lambda event, id=id1: self._highlight(id1))  # highlight outer square when hovering over inner
+        self.canvas.tag_bind(id2, "<Leave>", lambda event, id=id1: self._unhighlight(id1))  # unhighlight outer square when leaving inner
 
     def _draw_large_green_solid_circle(self, startx: int, starty: int) -> None:
         id = self.canvas.create_oval(startx, starty, startx + self.large_large, starty + self.large_large, fill="seagreen")
         self.canvas.addtag_withtag("lgsc", id)
+        self.canvas.tag_bind(id, "<Enter>", lambda event, id=id: self._highlight(id))
+        self.canvas.tag_bind(id, "<Leave>", lambda event, id=id: self._unhighlight(id))
 
     def _draw_large_green_hollow_circle(self, startx: int, starty: int) -> None:
         id1 = self.canvas.create_oval(startx, starty, startx + self.large_large, starty + self.large_large, fill="seagreen", outline="seagreen", width=2)
         id2 = self.canvas.create_oval(startx + self.large_small, starty + self.large_small, startx + self.large_large - self.large_small, starty + self.large_large - self.large_small, fill="mediumseagreen", outline="seagreen", width=2)
         self.canvas.addtag_withtag("lghc", id1)
         self.canvas.addtag_withtag("lghc", id2)
+        self.canvas.tag_bind(id1, "<Enter>", lambda event, id=id1: self._highlight(id1))
+        self.canvas.tag_bind(id1, "<Leave>", lambda event, id=id1: self._unhighlight(id1))
+        self.canvas.tag_bind(id2, "<Enter>", lambda event, id=id1: self._highlight(id1))  # highlight outer circle when hovering over inner
+        self.canvas.tag_bind(id2, "<Leave>", lambda event, id=id1: self._unhighlight(id1))  # unhighlight outer circle when leaving inner
 
     def _draw_small_green_solid_square(self, startx: int, starty: int) -> None:
         id = self.canvas.create_rectangle(startx, starty, startx + self.small_large, starty + self.small_large, fill="seagreen")
         self.canvas.addtag_withtag("sgss", id)
+        self.canvas.tag_bind(id, "<Enter>", lambda event, id=id: self._highlight(id))
+        self.canvas.tag_bind(id, "<Leave>", lambda event, id=id: self._unhighlight(id))
 
     def _draw_small_green_hollow_square(self, startx: int, starty: int) -> None:
         id1 = self.canvas.create_rectangle(startx, starty, startx + self.small_large, starty + self.small_large, fill="seagreen")
         id2 = self.canvas.create_rectangle(startx + self.small_small, starty + self.small_small, startx + self.small_large - self.small_small, starty + self.small_large - self.small_small, outline="seagreen", fill="mediumseagreen")
         self.canvas.addtag_withtag("sghs", id1)
         self.canvas.addtag_withtag("sghs", id2)
+        self.canvas.tag_bind(id1, "<Enter>", lambda event, id=id1: self._highlight(id1))
+        self.canvas.tag_bind(id1, "<Leave>", lambda event, id=id1: self._unhighlight(id1))
+        self.canvas.tag_bind(id2, "<Enter>", lambda event, id=id1: self._highlight(id1))  # highlight outer square when hovering over inner
+        self.canvas.tag_bind(id2, "<Leave>", lambda event, id=id1: self._unhighlight(id1))
 
     def _draw_small_green_solid_circle(self, startx: int, starty: int) -> None:
         id = self.canvas.create_oval(startx, starty, startx + self.small_large, starty + self.small_large, fill="seagreen")
         self.canvas.addtag_withtag("sgsc", id)
+        self.canvas.tag_bind(id, "<Enter>", lambda event, id=id: self._highlight(id))
+        self.canvas.tag_bind(id, "<Leave>", lambda event, id=id: self._unhighlight(id))
 
     def _draw_small_green_hollow_circle(self, startx: int, starty: int) -> None:
         id1 = self.canvas.create_oval(startx, starty, startx + self.small_large, starty + self.small_large, fill="seagreen", outline="seagreen", width=2)
         id2 = self.canvas.create_oval(startx + self.small_small, starty + self.small_small, startx + self.small_large - self.small_small, starty + self.small_large - self.small_small, fill="mediumseagreen", outline="seagreen", width=2)
         self.canvas.addtag_withtag("sghc", id1)
         self.canvas.addtag_withtag("sghc", id2)
-        self.canvas.addtag_withtag("sghc", id2)
+        self.canvas.tag_bind(id1, "<Enter>", lambda event, id=id1: self._highlight(id1))
+        self.canvas.tag_bind(id1, "<Leave>", lambda event, id=id1: self._unhighlight(id1))
+        self.canvas.tag_bind(id2, "<Enter>", lambda event, id=id1: self._highlight(id1))
+        self.canvas.tag_bind(id2, "<Leave>", lambda event, id=id1: self._unhighlight(id1))
