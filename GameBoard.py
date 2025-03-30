@@ -14,57 +14,72 @@ class GameBoard:
         self.bind_clicks()
         self.bind_highlight()
 
-    def select_piece(self, tag):
-        """Selects a piece if clicked."""
+    def select_piece(self, tag: str) -> bool:
+        """Selects a piece if clicked.
+        Args:
+            tag (str): The tag of the piece to be selected.
+        Returns:
+            bool: True if the piece was successfully selected, False if already played.
+        """
         if self.piece_played[tag]:
             print(f"Piece {tag} has already been played!")
+            return False
         else:
             self.selected_piece = tag
             print(f"Piece selected: {self.selected_piece}")
+            return True
 
-    def place_piece(self, tag):
-        """Places a selected piece on an empty grid slot."""
+    def place_piece(self, tag: str) -> bool:
+        """Places a selected piece on an empty grid slot.
+        Args:
+            tag (str): The tag of the grid slot where the piece is to be placed.
+        Returns:
+            bool: True if the piece was successfully placed, False otherwise.
+        """
         if not self.selected_piece:
             print("No piece selected!")
-            return
+            return False
 
         # Get the grid slot tag
         _, i, j = tag.split("-")
         i, j = int(i), int(j)
 
         # Check if the slot is empty
-        if self.board[j][i] is None:
-            # Get grid slot coordinates
-            x1, y1, x2, y2 = self.canvas.coords(tag)
-            slot_center_x = (x1 + x2) / 2
-            slot_center_y = (y1 + y2) / 2
-
-            # Get box of the selected piece
-            piece_coords = self.canvas.bbox(self.selected_piece)
-            if piece_coords:
-                piece_center_x = (piece_coords[0] + piece_coords[2]) / 2
-                piece_center_y = (piece_coords[1] + piece_coords[3]) / 2
-
-                # Calculate offsets to center the piece in the grid slot
-                offset_x = slot_center_x - piece_center_x
-                offset_y = slot_center_y - piece_center_y
-
-                # Move all shapes associated with the tag
-                self.canvas.move(self.selected_piece, offset_x, offset_y)
-                self.canvas.tag_raise(self.selected_piece)
-                self.canvas.update()  # Refresh
-
-                # Mark the board as occupied
-                self.board[j][i] = self.selected_piece
-                print(f"Placed piece {self.selected_piece} at ({i}, {j})")
-                self.piece_played[self.selected_piece] = True
-
-                # Deselect the piece
-                self.selected_piece = None
-            else:
-                print("Error: Could not get selected piece coordinates!")
-        else:
+        if self.board[j][i] is not None:
             print(f"Slot ({i}, {j}) is already occupied!")
+            return False
+        
+        # Get grid slot coordinates
+        x1, y1, x2, y2 = self.canvas.coords(tag)
+        slot_center_x = (x1 + x2) / 2
+        slot_center_y = (y1 + y2) / 2
+
+        # Get box of the selected piece
+        piece_coords = self.canvas.bbox(self.selected_piece)
+        if not piece_coords:
+            print("Error: Could not get selected piece coordinates!")
+            return False
+        
+        piece_center_x = (piece_coords[0] + piece_coords[2]) / 2
+        piece_center_y = (piece_coords[1] + piece_coords[3]) / 2
+
+        # Calculate offsets to center the piece in the grid slot
+        offset_x = slot_center_x - piece_center_x
+        offset_y = slot_center_y - piece_center_y
+
+        # Move all shapes associated with the tag
+        self.canvas.move(self.selected_piece, offset_x, offset_y)
+        self.canvas.tag_raise(self.selected_piece)
+        self.canvas.update()  # Refresh
+
+        # Mark the board as occupied
+        self.board[j][i] = self.selected_piece
+        print(f"Placed piece {self.selected_piece} at ({i}, {j})")
+        self.piece_played[self.selected_piece] = True
+
+        # Deselect the piece
+        self.selected_piece = None
+        return True
 
     def draw_board(self) -> None:
         """draws all pieces and board"""
