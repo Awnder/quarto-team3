@@ -5,19 +5,20 @@ class VictoryChecker:
         self.board = board
         self.canvas = canvas
 
-    def claim_victory(self, claim_direction_entry: tk.StringVar, claim_location_entry: tk.StringVar, claim_characteristic_entry: tk.StringVar):
+    def claim_victory(self, claim_direction_entry: tk.StringVar, claim_location_entry: tk.StringVar, claim_characteristic_entry: tk.StringVar) -> bool:
         """
         Claims victory and highlights the winning pieces.
 
         This method checks if there is a winning condition based on the claim type, location, and characteristic provided.
         If a winning condition is met, it announces the winner and highlights the winning pieces.
 
-        Parameters:
-        claim_direction_entry (tk.StringVar): The type of claim ("row", "column", or "diagonal").
-        claim_location_entry (tk.StringVar): The location of the claim (row number, column number, or diagonal type).
-        claim_characteristic_entry (tk.StringVar): The characteristic of the claim ("size", "color", "fill", or "shape").
+        Args:
+            claim_direction_entry (tk.StringVar): The type of claim ("row", "column", or "diagonal").
+            claim_location_entry (tk.StringVar): The location of the claim (row number, column number, or diagonal type).
+            claim_characteristic_entry (tk.StringVar): The characteristic of the claim ("size", "color", "fill", or "shape").
+        Returns:
+            bool: True if a winning condition is met, False otherwise.
         """
-
         is_win = None
         claim_type = claim_direction_entry.get()
         claim_location = claim_location_entry.get()
@@ -30,11 +31,7 @@ class VictoryChecker:
             elif claim_type == "column":
                 is_win = self._check_win_row(int(claim_location) - 1, claim_characteristic)
 
-        if is_win:
-            print(f"Player {self.turn} wins!")
-            tk.messagebox.showinfo("Game Over", f"Player {self.turn} wins!")
-        else:
-            print("No winner yet!")
+        return is_win
 
     def _check_win_row(self, row: int, characteristic: str) -> bool:
         """
