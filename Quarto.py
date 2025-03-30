@@ -107,9 +107,6 @@ class Quarto:
 
         self.turn = self.player1_name
 
-        self.draw_board()
-        self._bind_highlight()
-        self._bind_clicks()
         self.board = [[None for _ in range(4)] for _ in range(4)]  # creates a list of lists with 4 rows and 4 columns to fill in with pieces
 
         self.player_display = tk.Label(self.root, text=f"{self.turn}'s Turn", font=("Courier", 15, "bold"), fg="seagreen")
