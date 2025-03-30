@@ -34,6 +34,16 @@ class PieceDrawer:
         else:
             print(f"Error: Unknown piece name '{piece}'")
 
+    def _highlight(self, id):
+        """Highlights a piece when the mouse enters its area."""
+        self.canvas.itemconfig(id, outline="yellow", width=3)
+        print(f"Highlighting {id}")
+
+    def _unhighlight(self, id):
+        """Unhighlights a piece when the mouse leaves its area."""
+        self.canvas.itemconfig(id, outline="black", width=1)
+        print(f"Unhighlighting {id}")
+
     def _draw_large_purple_solid_square(self, startx: int, starty: int) -> None:
         id = self.canvas.create_rectangle(startx, starty, startx + self.large_large, starty + self.large_large, fill="purple4")
         self.canvas.addtag_withtag("lpss", id)
