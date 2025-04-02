@@ -103,6 +103,10 @@ class Quarto:
         print(self.player2_name)
         if self.player2_name == "QuartoTestBot":
             self.bot = QuartoTestBot()
+            # change_turn is called on piece place and select
+            # however, since the bot turn will never fire until a click happens,
+            # we need to call it here to ensure the bot plays
+            self.root.after(500, self.handle_bot_select)
         else:
             self.bot = None
 
@@ -117,7 +121,7 @@ class Quarto:
         close_button.pack(side=tk.BOTTOM)
 
         # victory handling
-        claim_button = tk.Button(self.root, text="Claim Victory", command=lambda: self.claim_victory(claim_direction_dropdown, claim_location_dropdown, claim_characteristic_dropdown))
+        claim_button = tk.Button(self.root, text="Claim Victory", command=lambda: self.claim_victory(claim_direction_dropdown.get(), claim_location_dropdown.get(), claim_characteristic_dropdown.get()))
 
         claim_direction_label = tk.Label(self.root, text="Claim Direction: ")
         claim_direction_dropdown = ttk.Combobox(self.root, values=["row", "column", "diagonal"], state="readonly")
@@ -194,7 +198,7 @@ class Quarto:
         else:
             self.selected_piece = tag
             print(f"Piece selected: {self.selected_piece}")
-            self._change_turn()
+            self.change_turn()
 
     def place_piece(self, event, tag):
         """Places a selected piece on an empty grid slot."""
@@ -239,7 +243,7 @@ class Quarto:
 
                 # Deselect the piece
                 self.selected_piece = None
-                self._change_turn()
+                self.change_turn()
             else:
                 print("Error: Could not get selected piece coordinates!")
         else:
@@ -270,7 +274,7 @@ class Quarto:
 
                 total_scores, current_categories = self._check_win_tag_identifier(total_scores, current_categories, tag)
 
-                print(f"check win {tag} at ({row},{col}) count_size: {total_scores[0]}, count_color: {total_scores[1]}, count_fill: {total_scores[2]}, count_shape: {total_scores[3]}")
+                # print(f"check win {tag} at ({row},{col}) count_size: {total_scores[0]}, count_color: {total_scores[1]}, count_fill: {total_scores[2]}, count_shape: {total_scores[3]}")
 
             if (total_scores[0] == 4 and characteristic == "size") or (total_scores[1] == 4 and characteristic == "color") or (total_scores[2] == 4 and characteristic == "fill") or (total_scores[3] == 4 and characteristic == "shape"):
                 return True
@@ -299,7 +303,7 @@ class Quarto:
 
                 total_scores, current_categories = self._check_win_tag_identifier(total_scores, current_categories, tag)
 
-                print(f"check win {tag} at ({row},{col}) count_size: {total_scores[0]}, count_color: {total_scores[1]}, count_fill: {total_scores[2]}, count_shape: {total_scores[3]}")
+                # print(f"check win {tag} at ({row},{col}) count_size: {total_scores[0]}, count_color: {total_scores[1]}, count_fill: {total_scores[2]}, count_shape: {total_scores[3]}")
 
             if (total_scores[0] == 4 and characteristic == "size") or (total_scores[1] == 4 and characteristic == "color") or (total_scores[2] == 4 and characteristic == "fill") or (total_scores[3] == 4 and characteristic == "shape"):
                 return True
@@ -328,7 +332,7 @@ class Quarto:
 
                     total_scores, current_categories = self._check_win_tag_identifier(total_scores, current_categories, tag)
 
-                    print(f"check win {tag} at ({row},{col}) count_size: {total_scores[0]}, count_color: {total_scores[1]}, count_fill: {total_scores[2]}, count_shape: {total_scores[3]}")
+                    # print(f"check win {tag} at ({row},{col}) count_size: {total_scores[0]}, count_color: {total_scores[1]}, count_fill: {total_scores[2]}, count_shape: {total_scores[3]}")
 
             if (total_scores[0] == 4 and characteristic == "size") or (total_scores[1] == 4 and characteristic == "color") or (total_scores[2] == 4 and characteristic == "fill") or (total_scores[3] == 4 and characteristic == "shape"):
                 return True
@@ -341,7 +345,7 @@ class Quarto:
 
                     total_scores, current_categories = self._check_win_tag_identifier(total_scores, current_categories, tag)
 
-                    print(f"check win {tag} at ({row},{col}) count_size: {total_scores[0]}, count_color: {total_scores[1]}, count_fill: {total_scores[2]}, count_shape: {total_scores[3]}")
+                    # print(f"check win {tag} at ({row},{col}) count_size: {total_scores[0]}, count_color: {total_scores[1]}, count_fill: {total_scores[2]}, count_shape: {total_scores[3]}")
 
             if (total_scores[0] == 4 and characteristic == "size") or (total_scores[1] == 4 and characteristic == "color") or (total_scores[2] == 4 and characteristic == "fill") or (total_scores[3] == 4 and characteristic == "shape"):
                 return True
@@ -383,7 +387,7 @@ class Quarto:
             current_categories[3] = tag[3]
         return total_scores, current_categories
 
-    def _check_win_any(self) -> bool:
+    def check_win_any(self):
         """
         Checks if a player has won in any row, column, or diagonal.
         Returns True if any winning condition is met.
@@ -391,19 +395,20 @@ class Quarto:
         characteristic = ["size", "color", "fill", "shape"]
         for c in characteristic:
             for row in range(4):
-                if self._check_win_row(row, c):
-                    return True
+                if self.claim_victory("row", row + 1, c):
+                    return
 
             for col in range(4):
-                if self._check_win_col(col, c):
-                    return True
+                if self.claim_victory("column", col + 1, c):
+                    return
 
-            if self._check_win_diagonal("main", c) or self._check_win_diagonal("anti", c):
-                return True
+            if self.claim_victory("diagonal", "main", c):
+                return
 
-        return False
+            if self.claim_victory("diagonal", "anti", c):
+                return
 
-    def claim_victory(self, claim_direction_entry: tk.StringVar, claim_location_entry: tk.StringVar, claim_characteristic_entry: tk.StringVar):
+    def claim_victory(self, claim_direction: str, claim_location: str, claim_characteristic: str):
         """
         Claims victory and highlights the winning pieces.
 
@@ -411,53 +416,47 @@ class Quarto:
         If a winning condition is met, it announces the winner and highlights the winning pieces.
 
         Parameters:
-        claim_direction_entry (tk.StringVar): The type of claim ("row", "column", or "diagonal").
-        claim_location_entry (tk.StringVar): The location of the claim (row number, column number, or diagonal type).
-        claim_characteristic_entry (tk.StringVar): The characteristic of the claim ("size", "color", "fill", or "shape").
+        claim_direction_entry (str): The type of claim ("row", "column", or "diagonal").
+        claim_location_entry (str): The location of the claim (row number, column number, or diagonal type).
+        claim_characteristic_entry (str): The characteristic of the claim ("size", "color", "fill", or "shape").
         """
 
         is_win = None
-        claim_type = claim_direction_entry.get()
-        claim_location = claim_location_entry.get()
-        claim_characteristic = claim_characteristic_entry.get()
-        if claim_type == "diagonal":
+        if claim_direction == "diagonal":
             is_win = self._check_win_diagonal(claim_location, claim_characteristic)
         else:
-            if claim_type == "row":
+            if claim_direction == "row":
                 is_win = self._check_win_row(int(claim_location) - 1, claim_characteristic)
-            elif claim_type == "column":
+            elif claim_direction == "column":
                 is_win = self._check_win_row(int(claim_location) - 1, claim_characteristic)
 
         if is_win:
-            print(f"Player {self.turn} wins!")
-            messagebox.showinfo("Game Over", f"Player {self.turn} wins!")
-        else:
-            print("No winner yet!")
+            print(f"Player {''.join(self.state.split(' ')[0:2])} wins!")
+            messagebox.showinfo("Game Over", f"Player {''.join(self.state.split(' ')[0:2])} wins!")
+            return True
+        
+        print("No winner yet!")
+        return False
+
 
     ### TKINTER DYNAMIC UPDATE FUNCTIONS ###
-    def _handle_bot_place(self):
+    def handle_bot_place(self):
         """Handles the bot's turn if player 2 is a bot. It selects a piece and places it on the board."""
         # Find a spot for the bot's move
-        for i in range(4):
-            for j in range(4):
-                if self.board[j][i] is None:  # Check if the slot is empty
-                    tag = f"board-{i}-{j}"
-                    self.place_piece(None, tag)  # Simulate click on an empty board spot
-                    break  # Stop after placing one piece
-        
-        self._check_win_any()  # Check if the bot has won
+        i, j = self.bot.place_piece(self.board, self.piece_played, self.selected_piece)
+        self.place_piece(None, f"board-{i}-{j}")  # Simulate click on the board spot
+        self.check_win_any()
     
-    def _handle_bot_select(self):
+    def handle_bot_select(self):
         """Handles the bot's selection of a piece to play.
         This function is called when it's the bot's turn to select a piece.
         """
         selected_piece = self.bot.select_piece(self.board, self.piece_played)
         if selected_piece:
             self.selected_piece = selected_piece
-            print(f"Bot selected piece: {self.selected_piece}")
-            self._change_turn()
+            self.change_turn()
 
-    def _change_turn(self):
+    def change_turn(self):
         """Changes turn and updates the display correctly"""
         state_index = self.possible_states.index(self.state)
         # goes back to the first index if at the last state
@@ -468,9 +467,9 @@ class Quarto:
         
         if self.bot:
             if self.state == "Player 2 Places":
-                self.root.after(500, self._handle_bot_place)  # Ensure delay before bot plays
+                self.root.after(500, self.handle_bot_place)  # Ensure delay before bot plays
             elif self.state == "Player 2 Selects":
-                self.root.after(500, self._handle_bot_select)
+                self.root.after(500, self.handle_bot_select)
 
     def _update_opponent(self, opponent_dropdown: ttk.Combobox, player2_bot_dropdown: ttk.Combobox, player2_name_entry: tk.Entry, player2_name_label: tk.Label):
         """updates the player 2 name label and entry based on the opponent dropdown"""
