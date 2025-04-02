@@ -14,7 +14,8 @@ class Quarto:
         # players
         self.player1_name = None
         self.player2_name = None
-        self.turn = None # string state variable to track whose turn it is
+        self.state = "Player 2 Selects"
+        self.possible_states = ["Player 2 Selects", "Player 1 Places", "Player 1 Selects", "Player 2 Places"]
         self.player_display = None # label that displays the current player
         self.bot = None # bot object if player 2 is a bot
 
@@ -105,14 +106,12 @@ class Quarto:
         else:
             self.bot = None
 
-        self.turn = self.player1_name
-
         self.draw_board()
         self._bind_highlight()
         self._bind_clicks()
         self.board = [[None for _ in range(4)] for _ in range(4)]  # creates a list of lists with 4 rows and 4 columns to fill in with pieces
 
-        self.player_display = tk.Label(self.root, text=f"{self.turn}'s Turn", font=("Courier", 15, "bold"), fg="seagreen")
+        self.player_display = tk.Label(self.root, text=f"{self.state}", font=("Courier", 15, "bold"), fg="seagreen")
         close_button = tk.Button(self.root, text="Close", command=self.init_menu_screen)
         self.player_display.pack(side=tk.TOP)
         close_button.pack(side=tk.BOTTOM)
@@ -186,6 +185,10 @@ class Quarto:
 
     def select_piece(self, event, tag):
         """Selects a piece if clicked."""
+        if self.state == "Player 1 Places" or self.state == "Player 2 Places":
+            print(f"Invalid action for state: {self.state}")
+            return
+        
         if self.piece_played[tag]:
             print(f"Piece {tag} has already been played!")
         else:
@@ -195,6 +198,10 @@ class Quarto:
 
     def place_piece(self, event, tag):
         """Places a selected piece on an empty grid slot."""
+        if self.state == "Player 1 Selects" or self.state == "Player 2 Selects":
+            print(f"Invalid action for state: {self.state}")
+            return
+
         if not self.selected_piece:
             print("No piece selected!")
             return
@@ -232,6 +239,7 @@ class Quarto:
 
                 # Deselect the piece
                 self.selected_piece = None
+                self._change_turn()
             else:
                 print("Error: Could not get selected piece coordinates!")
         else:
@@ -427,31 +435,42 @@ class Quarto:
             print("No winner yet!")
 
     ### TKINTER DYNAMIC UPDATE FUNCTIONS ###
-    def _handle_bot_turn(self):
+    def _handle_bot_place(self):
         """Handles the bot's turn if player 2 is a bot. It selects a piece and places it on the board."""
-        if self.bot:
-            # Select a piece for the human player
-            self.selected_piece = self.bot.select_piece(self.board, self.piece_played)
+        # Find a spot for the bot's move
+        for i in range(4):
+            for j in range(4):
+                if self.board[j][i] is None:  # Check if the slot is empty
+                    tag = f"board-{i}-{j}"
+                    self.place_piece(None, tag)  # Simulate click on an empty board spot
+                    break  # Stop after placing one piece
         
-            # Find a spot for the bot's move
-            for i in range(4):
-                for j in range(4):
-                    if self.board[j][i] is None:  # Check if the slot is empty
-                        tag = f"board-{i}-{j}"
-                        self.place_piece(None, tag)  # Simulate click on an empty board spot
-                        return  # Stop after placing one piece
-            
-            self._check_win_any()  # Check if the bot has won
-        
+        self._check_win_any()  # Check if the bot has won
+    
+    def _handle_bot_select(self):
+        """Handles the bot's selection of a piece to play.
+        This function is called when it's the bot's turn to select a piece.
+        """
+        selected_piece = self.bot.select_piece(self.board, self.piece_played)
+        if selected_piece:
+            self.selected_piece = selected_piece
+            print(f"Bot selected piece: {self.selected_piece}")
+            self._change_turn()
+
     def _change_turn(self):
         """Changes turn and updates the display correctly"""
-        self.turn = self.player1_name if self.turn == self.player2_name else self.player2_name  # Toggle turn
+        state_index = self.possible_states.index(self.state)
+        # goes back to the first index if at the last state
+        state_index = 0 if state_index + 1 >= len(self.possible_states) else state_index + 1
+        self.state = self.possible_states[state_index]
 
-        if self.turn == self.player1_name:
-            self.player_display.config(text=f"{self.player1_name}'s Turn", fg="seagreen")
-        else:
-            self.player_display.config(text=f"{self.player2_name}'s Turn", fg="purple4")
-            self.root.after(500, self._handle_bot_turn)  # Ensure delay before bot plays
+        self.player_display.config(text=f"{self.state}", fg="seagreen" if self.state.startswith("Player 1") else "purple4")
+        
+        if self.bot:
+            if self.state == "Player 2 Places":
+                self.root.after(500, self._handle_bot_place)  # Ensure delay before bot plays
+            elif self.state == "Player 2 Selects":
+                self.root.after(500, self._handle_bot_select)
 
     def _update_opponent(self, opponent_dropdown: ttk.Combobox, player2_bot_dropdown: ttk.Combobox, player2_name_entry: tk.Entry, player2_name_label: tk.Label):
         """updates the player 2 name label and entry based on the opponent dropdown"""
