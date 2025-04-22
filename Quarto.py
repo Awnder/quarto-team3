@@ -33,47 +33,64 @@ class Quarto:
 
     def init_menu_screen(self):
         """
-        creates a start screen for the game so players can input their names.
-        the goal is after this first creation tkinter will juggle between the menu and gameboard screen
+        Creates a start screen for the game so players can input their names.
         """
+
         if self.root:
             self.root.destroy()
 
-        # recreate tk interface for game menu
         self.root = tk.Tk()
         self.root.title("Quarto Menu")
         self.root.geometry("600x400")
         self.root.configure(bg="white")
 
-        title = tk.Label(self.root, text="Welcome to Quarto", font=("Courier", 25, "bold"), bg="white")
-        instruction = tk.Label(self.root, text="Enter Player Names to Begin!", font=("Courier", 15, "normal"))
-        
-        # player and bot widgets for labels, entries, and dropdowns
-        # storing names in StringVar so they can be used later after the entries are destroyed when starting a new screen
+        title_font = ("Helvetica", 24, "bold")
+        label_font = ("Helvetica", 14, "bold")
+        entry_font = ("Helvetica", 12)
+        note_font = ("Helvetica", 10, "italic")
+
+        title = tk.Label(self.root, text="Welcome to Quarto", font=title_font, bg="white", fg="#222222")
+        instruction = tk.Label(self.root, text="Enter Player Names to Begin!", font=("Helvetica", 16), bg="white", fg="#333333")
+
+        # StringVars
         player1_name = tk.StringVar()
         player2_name = tk.StringVar()
 
-        player1_name_label = tk.Label(self.root, text="Player 1 Name", font=("Courier", 15, "bold"), fg="seagreen")
-        player1_name_entry = tk.Entry(self.root, textvariable=player1_name, font=("Courier", 12, "normal"), fg="seagreen", bg="lightgray")
-        
-        player2_name_label = tk.Label(self.root, text="Player 2 Name", font=("Courier", 15, "bold"), fg="purple4")
-        player2_name_entry = tk.Entry(self.root, textvariable=player2_name, font=("Courier", 12, "normal"), fg="purple4", bg="lightgray")
-        opponent_label = tk.Label(self.root, text="Use: QuartoTestBot for a Bot Player", font=("Courier", 10, "normal"), fg="purple4")
+        # Player 1 Widgets
+        player1_name_label = tk.Label(self.root, text="Player 1 Name", font=label_font, fg="#2E8B57", bg="white")
+        player1_name_entry = tk.Entry(self.root, textvariable=player1_name, font=entry_font, fg="black", bg="#f0f0f0")
 
-        submit_button = tk.Button(self.root, text="Start Game", command=lambda: self.init_game_screen(player1_name, player2_name), bg="lightgrey")
+        # Player 2 Widgets
+        player2_name_label = tk.Label(self.root, text="Player 2 Name", font=label_font, fg="#6A0DAD", bg="white")
+        player2_name_entry = tk.Entry(self.root, textvariable=player2_name, font=entry_font, fg="black", bg="#f0f0f0")
 
-        # centers widgets horizontally for each column
+        # Notes
+        opponent_label1 = tk.Label(self.root, text="Use: QuartoTestBot for a Bot Player", font=note_font, fg="#6A0DAD", bg="white")
+        opponent_label2 = tk.Label(self.root, text="Use: SmarterQuartoBot for a Smart Bot Player", font=note_font, fg="#6A0DAD", bg="white")
+
+        # Button
+        submit_button = tk.Button(self.root, text="Start Game", font=entry_font,
+                              command=lambda: self.init_game_screen(player1_name, player2_name),
+                              bg="#ffffff", fg="#000000", highlightbackground="#333333")
+
+        # Layout
         self.root.grid_columnconfigure(0, weight=1)
         self.root.grid_columnconfigure(1, weight=1)
 
-        title.grid(row=0, column=0, columnspan=2, pady=20)
-        instruction.grid(row=1, column=0, columnspan=2, pady=10)
-        player1_name_label.grid(row=2, column=0, pady=10)
-        player2_name_label.grid(row=2, column=1, pady=10)
-        player1_name_entry.grid(row=3, column=0, pady=10)
-        player2_name_entry.grid(row=3, column=1, pady=10)
-        opponent_label.grid(row=4, column=0, columnspan=2, pady=10)
+        title.grid(row=0, column=0, columnspan=2, pady=(20, 10))
+        instruction.grid(row=1, column=0, columnspan=2, pady=(0, 15))
+
+        player1_name_label.grid(row=2, column=0, pady=5)
+        player2_name_label.grid(row=2, column=1, pady=5)
+
+        player1_name_entry.grid(row=3, column=0, pady=5, ipadx=20)
+        player2_name_entry.grid(row=3, column=1, pady=5, ipadx=20)
+
+        opponent_label1.grid(row=4, column=0, columnspan=2, pady=(10, 2))
+        opponent_label2.grid(row=5, column=0, columnspan=2, pady=(0, 20))
+
         submit_button.grid(row=6, column=0, columnspan=2, pady=10)
+
 
     def init_game_screen(self, player1_name: tk.StringVar, player2_name: tk.StringVar):
         """
@@ -106,6 +123,10 @@ class Quarto:
             # change_turn is called on piece place and select
             # however, since the bot turn will never fire until a click happens,
             # we need to call it here to ensure the bot plays
+            self.root.after(500, self.handle_bot_select)
+        elif self.player2_name == "SmarterQuartoBot":
+            from QuartoBot import SmarterQuartoBot  # make sure the bot is defined there
+            self.bot = SmarterQuartoBot()
             self.root.after(500, self.handle_bot_select)
         else:
             self.bot = None
