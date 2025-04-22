@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from QuartoBot import QuartoTestBot
 
 
 class Quarto:
@@ -119,6 +118,7 @@ class Quarto:
             self.player2_name = player2_name.get()
         print(self.player2_name)
         if self.player2_name == "QuartoTestBot":
+            from QuartoBot import QuartoTestBot
             self.bot = QuartoTestBot()
             # change_turn is called on piece place and select
             # however, since the bot turn will never fire until a click happens,
