@@ -220,6 +220,8 @@ class Quarto:
             self.selected_piece = tag
             print(f"Piece selected: {self.selected_piece}")
             self.change_turn()
+        
+        self._click_highlight(event, tag)  # Highlight the selected piece on click
 
     def place_piece(self, event, tag):
         """Places a selected piece on an empty grid slot."""
@@ -263,6 +265,7 @@ class Quarto:
                 self.piece_played[self.selected_piece] = True
 
                 # Deselect the piece
+                self.canvas.itemconfig(self.selected_piece, outline="black", width=1)  # Reset outline color and width
                 self.selected_piece = None
                 self.change_turn()
             else:
@@ -474,8 +477,11 @@ class Quarto:
         """
         selected_piece = self.bot.select_piece(self.board, self.piece_played)
         if selected_piece:
-            self.selected_piece = selected_piece
-            self.change_turn()
+            # "clicks" the piece by generating a click event at the center of the piece
+            # button click automatically handles changing the turn
+            coords = self.canvas.coords(selected_piece)
+            self.canvas.event_generate("<Button-1>", x=(coords[0] + coords[2]) / 2, y=(coords[1] + coords[3]) / 2)
+            self.selected_piece = selected_piece 
 
     def change_turn(self):
         """Changes turn and updates the display correctly"""
@@ -513,12 +519,28 @@ class Quarto:
             claim_location_dropdown.current(0)
 
     def _highlight(self, event, id):
-        """change border color to yellow and increase width of border upon mouseover"""
+        """change border color to yellow and increase width of border upon mouseover.
+        Doesn't highlight if the piece is already selected.
+        """
+        tag = self.canvas.gettags(id)[0]
+        if tag == self.selected_piece:
+            return
         self.canvas.itemconfig(id, outline="yellow", width=3)
 
     def _unhighlight(self, event, id):
-        """change border color to black and increase width of border upon mouseover"""
+        """change border color to black and increase width of border upon mouseover.
+        Doesn't unhighlight if the piece is already selected.
+        """
+        tag = self.canvas.gettags(id)[0]
+        if tag == self.selected_piece:
+            return
         self.canvas.itemconfig(id, outline="black", width=1)
+
+    def _click_highlight(self, event, tag):
+        """change border color to red and increase width of border upon mouse click.
+        Overrides the highlight and unhighlight functions.
+        """
+        self.canvas.itemconfig(tag, outline="red", width=3)
 
     ### TKINTER BIND FUNCTIONS ###
 
