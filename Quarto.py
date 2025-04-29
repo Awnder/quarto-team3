@@ -327,7 +327,7 @@ class Quarto:
 
                 total_scores, current_categories = self._check_win_tag_identifier(total_scores, current_categories, tag)
 
-                # print(f"check win {tag} at ({row},{col}) count_size: {total_scores[0]}, count_color: {total_scores[1]}, count_fill: {total_scores[2]}, count_shape: {total_scores[3]}")
+                print(f"check win {tag} at ({row},{col}) count_size: {total_scores[0]}, count_color: {total_scores[1]}, count_fill: {total_scores[2]}, count_shape: {total_scores[3]}")
 
             if (total_scores[0] == 4 and characteristic == "size") or (total_scores[1] == 4 and characteristic == "color") or (total_scores[2] == 4 and characteristic == "fill") or (total_scores[3] == 4 and characteristic == "shape"):
                 return True
@@ -444,7 +444,6 @@ class Quarto:
         claim_location_entry (str): The location of the claim (row number, column number, or diagonal type).
         claim_characteristic_entry (str): The characteristic of the claim ("size", "color", "fill", or "shape").
         """
-
         is_win = None
         if claim_direction == "diagonal":
             is_win = self._check_win_diagonal(claim_location, claim_characteristic)
@@ -452,7 +451,7 @@ class Quarto:
             if claim_direction == "row":
                 is_win = self._check_win_row(int(claim_location) - 1, claim_characteristic)
             elif claim_direction == "column":
-                is_win = self._check_win_row(int(claim_location) - 1, claim_characteristic)
+                is_win = self._check_win_col(int(claim_location) - 1, claim_characteristic)
 
         if is_win:
             print(f"Player {''.join(self.state.split(' ')[0:2])} wins!")
