@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
+from PIL import Image, ImageTk
 
 
 class Quarto:
@@ -9,6 +10,7 @@ class Quarto:
         self.root = None
         self.canvas = None
         self.board = None
+        self.logo_img = None 
 
         # Players
         self.player1_name = None
@@ -43,6 +45,15 @@ class Quarto:
         self.root.geometry("600x400")
         self.root.configure(bg="white")
 
+        image_path = "quarto_logo.jpg"
+        image = Image.open(image_path)
+        image = image.resize((200, 100), Image.Resampling.LANCZOS)
+        self.logo_img = ImageTk.PhotoImage(image)
+
+        # Display the image
+        logo_label = tk.Label(self.root, image=self.logo_img, bg="white")
+        logo_label.grid(row=0, column=0, columnspan=2, pady=(10, 5))
+
         title_font = ("Helvetica", 24, "bold")
         label_font = ("Helvetica", 14, "bold")
         entry_font = ("Helvetica", 12)
@@ -76,7 +87,7 @@ class Quarto:
         self.root.grid_columnconfigure(0, weight=1)
         self.root.grid_columnconfigure(1, weight=1)
 
-        title.grid(row=0, column=0, columnspan=2, pady=(20, 10))
+        title.grid(row=1, column=0, columnspan=2, pady=(0, 10))
         instruction.grid(row=1, column=0, columnspan=2, pady=(0, 15))
 
         player1_name_label.grid(row=2, column=0, pady=5)
