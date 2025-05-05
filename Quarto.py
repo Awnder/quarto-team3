@@ -5,20 +5,20 @@ from tkinter import messagebox
 
 class Quarto:
     def __init__(self):
-        # initalize menu and game tk screens
+        # Initalize menu and game screens
         self.root = None
         self.canvas = None
         self.board = None
 
-        # players
+        # Players
         self.player1_name = None
         self.player2_name = None
         self.state = "Player 2 Selects"
         self.possible_states = ["Player 2 Selects", "Player 1 Places", "Player 1 Selects", "Player 2 Places"]
-        self.player_display = None # label that displays the current player
-        self.bot = None # bot object if player 2 is a bot
+        self.player_display = None # Label that displays the current player
+        self.bot = None # Bot object if player 2 is a bot
 
-        # pieces
+        # Pieces
         self.small_small = 15
         self.small_large = 50
         self.large_small = 25
@@ -26,7 +26,7 @@ class Quarto:
         self.selected_piece = None  # Stores the currently selected piece's tag
         self.piece_played = {}
 
-        self.init_menu_screen()  # start game here at menu
+        self.init_menu_screen()  # Start game here at menu
 
         self.root.mainloop()
 
@@ -93,13 +93,13 @@ class Quarto:
 
     def init_game_screen(self, player1_name: tk.StringVar, player2_name: tk.StringVar):
         """
-        creates a game screen so players can play quarto
+        Creates a game screen so players can play quarto
         the goal is upon game end, tkinter will juggle between the menu and gameboard screen
         """
         if self.root:
             self.root.destroy()
 
-        # recreate tk interface for the game board
+        # Recreate tk interface for the game board
         self.root = tk.Tk()
         self.root.title("Quarto Game")
         self.root.geometry("1400x1000")
@@ -107,7 +107,7 @@ class Quarto:
         self.canvas.pack(fill=tk.BOTH, expand=1)
         self.canvas.configure(bg="white")
 
-        # if player name is empty just default to Player 1 or Player 2
+        # If player name is empty just default to Player 1 or Player 2
         if player1_name.get().strip() == "":
             self.player1_name = "Player 1"
         else:
@@ -120,7 +120,7 @@ class Quarto:
         if self.player2_name == "QuartoTestBot":
             from QuartoBot import QuartoTestBot
             self.bot = QuartoTestBot()
-            # change_turn is called on piece place and select
+            # Change_turn is called on piece place and select
             # however, since the bot turn will never fire until a click happens,
             # we need to call it here to ensure the bot plays
             self.root.after(500, self.handle_bot_select)
@@ -134,14 +134,14 @@ class Quarto:
         self.draw_board()
         self._bind_highlight()
         self._bind_clicks()
-        self.board = [[None for _ in range(4)] for _ in range(4)]  # creates a list of lists with 4 rows and 4 columns to fill in with pieces
+        self.board = [[None for _ in range(4)] for _ in range(4)]  # Creates a list of lists with 4 rows and 4 columns to fill in with pieces
 
         self.player_display = tk.Label(self.root, text=f"{self.state}", font=("Courier", 15, "bold"), fg="seagreen")
         close_button = tk.Button(self.root, text="Close", command=self.init_menu_screen)
         self.player_display.pack(side=tk.TOP)
         close_button.pack(side=tk.BOTTOM)
 
-        # victory handling
+        # Win handling
         claim_button = tk.Button(self.root, text="Claim Victory", command=lambda: self.claim_victory(claim_direction_dropdown.get(), claim_location_dropdown.get(), claim_characteristic_dropdown.get()))
 
         claim_direction_label = tk.Label(self.root, text="Claim Direction: ")
@@ -201,10 +201,10 @@ class Quarto:
         self.draw_piece("sghc", 75, 730)
         self.piece_played["sghc"] = False
 
-        # have to draw 16 rectangles instead of lines in order to highlight them upon mouseover
+        # Have to draw 16 rectangles instead of lines in order to highlight them upon mouseover
         for i in range(4):
             for j in range(4):
-                # instead of 200, use 202 to create 2px extra space between squares so highlight doesn't overlap
+                # Instead of 200, use 202 to create 2px extra space between squares so highlight doesn't overlap
                 id = self.canvas.create_rectangle(400 + 202 * i, 50 + 202 * j, 600 + 202 * i, 250 + 202 * j, fill="white", outline="black", width=1)
                 self.canvas.addtag_withtag(f"board-{i}-{j}", id)
 
