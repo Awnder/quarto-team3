@@ -518,33 +518,46 @@ class Quarto:
             claim_location_dropdown.current(0)
 
     def _highlight(self, event, id):
-        """change border color to yellow and increase width of border upon mouseover.
+        """Changes border color to a highlighted color and increase width of border upon mouseover.
         Doesn't highlight if the piece is already selected.
         """
         tag = self.canvas.gettags(id)[0]
         if tag == self.selected_piece:
             return
-        self.canvas.itemconfig(id, outline="yellow", width=3)
+        fill_color = self.canvas.itemcget(id, "fill")
+        if fill_color == "purple4":
+            self.canvas.itemconfig(id, outline="purple1", width=3)
+        elif fill_color == "seagreen":
+            self.canvas.itemconfig(id, outline="mediumseagreen", width=3)
 
     def _unhighlight(self, event, id):
-        """change border color to black and increase width of border upon mouseover.
+        """Changes border color to black and increase width of border upon mouseover.
         Doesn't unhighlight if the piece is already selected.
         """
         tag = self.canvas.gettags(id)[0]
         if tag == self.selected_piece:
             return
-        self.canvas.itemconfig(id, outline="black", width=1)
+        fill_color = self.canvas.itemcget(id, "fill")
+        if fill_color == "purple4":
+            self.canvas.itemconfig(id, outline="purple4", width=1)
+        elif fill_color == "seagreen":
+            self.canvas.itemconfig(id, outline="seagreen", width=1)
 
     def _click_highlight(self, event, tag):
-        """change border color to red and increase width of border upon mouse click.
+        """Changes a border color to red and increase width of border upon mouse click.
         Overrides the highlight and unhighlight functions.
         """
-        self.canvas.itemconfig(tag, outline="red", width=3)
+        id = self.canvas.find_withtag(tag)[0]
+        fill_color = self.canvas.itemcget(id, "fill")
+        if fill_color == "purple4":
+            self.canvas.itemconfig(id, outline="mediumorchid1", width=3)
+        elif fill_color == "seagreen":
+            self.canvas.itemconfig(id, outline="palegreen", width=3)
 
     ### TKINTER BIND FUNCTIONS ###
 
     def _bind_highlight(self):
-        """binds the highlight and unhighlight functions to all tags"""
+        """Binds the highlight and unhighlight functions to all tags"""
         all_tags = []
         for id in self.canvas.find_all():
             tags = self.canvas.gettags(id)
